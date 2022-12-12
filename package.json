@@ -1,0 +1,42 @@
+{
+  "name": "@radham/semver",
+  "version": "0.0.0",
+  "description": "A library for parsing and working with Semantic Versioning.",
+  "keywords": [
+    "semver"
+  ],
+  "homepage": "https://github.com/jbenner-radham/semver.js#readme",
+  "bugs": {
+    "url": "https://github.com/jbenner-radham/semver.js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbenner-radham/semver.js.git"
+  },
+  "license": "MIT",
+  "author": "James Benner <james.benner@gmail.com> (https://www.jamesbenner.com/)",
+  "type": "module",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .js --ignore-path .gitignore",
+    "prepare": "husky install",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "npm test -- --watchAll"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^8.29.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.2",
+    "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1",
+    "jest-extended": "^3.2.0",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.1",
+    "sort-package-json": "^2.1.0"
+  }
+}

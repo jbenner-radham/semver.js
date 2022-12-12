@@ -1,2 +1,3 @@
-# semver
-A JavaScript library for parsing and working with Semantic Versioning.
+@radham/semver
+==============
+A library for parsing and working with [Semantic Versioning](https://semver.org/).
