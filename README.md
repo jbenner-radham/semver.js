@@ -12,6 +12,10 @@ Reference
 ---------
 * [Semantic Versioning](https://semver.org/)
 
+Prior Art
+---------
+* [semver](https://github.com/npm/node-semver#readme)
+
 License
 -------
 The MIT License. See the [license file](LICENSE) for details.
