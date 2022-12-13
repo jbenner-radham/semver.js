@@ -87,4 +87,32 @@ describe('is', () => {
             });
         });
     });
+
+    describe('#lessThan', () => {
+        it('is a function', () => {
+            expect(is('1.0.0').lessThan).toBeFunction();
+        });
+
+        it('returns a boolean', () => {
+            expect(is('1.0.0').lessThan('1.0.0')).toBeBoolean();
+        });
+
+        describe('when passed 1.0.0 to both functions', () => {
+            it('returns false', () => {
+                expect(is('1.0.0').lessThan('1.0.0')).toBeFalse();
+            });
+        });
+
+        describe('when passed 0.8.2 to the first function and 0.9.0 to the second', () => {
+            it('returns true', () => {
+                expect(is('0.8.2').lessThan('0.9.0')).toBeTrue();
+            });
+        });
+
+        describe('when passed 1.1.1 to the first function and 1.0.1 to the second', () => {
+            it('returns false', () => {
+                expect(is('1.1.1').lessThan('1.0.1')).toBeFalse();
+            });
+        });
+    });
 });
