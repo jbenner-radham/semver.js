@@ -8,6 +8,18 @@ Why Another SemVer Library?
 ---------------------------
 This library doesn't use RegEx at all. Meaning that it's immune to [ReDoS](https://en.wikipedia.org/wiki/ReDoS) attacks. Is that a big deal? Honestly, I don't know so I'll leave that up to you to decide. Another reason is that I felt the APIs of the available SemVer packages could be more ergonomic so I figured I'd try my hand at it while keeping the package at zero dependencies.
 
+Usage
+-----
+```js
+import { is } from '@radham/semver';
+
+is('1.0.0').equalTo('1.0.0'); // > true
+is('0.8.5').greaterThan('1.0.0'); // > false
+is('2.1.3').greaterThanOrEqualTo('1.5.2'); // > true
+is('0.0.23').lessThan('0.0.38'); // > true
+is('1.6.8').lessThanOrEqualTo('1.4.0'); // > false
+```
+
 Reference
 ---------
 * [Semantic Versioning](https://semver.org/)

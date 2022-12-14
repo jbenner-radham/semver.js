@@ -115,4 +115,32 @@ describe('is', () => {
             });
         });
     });
+
+    describe('#lessThanOrEqualTo', () => {
+        it('is a function', () => {
+            expect(is('1.0.0').lessThanOrEqualTo).toBeFunction();
+        });
+
+        it('returns a boolean', () => {
+            expect(is('1.0.0').lessThanOrEqualTo('1.0.0')).toBeBoolean();
+        });
+
+        describe('when passed 1.0.0 to both functions', () => {
+            it('returns true', () => {
+                expect(is('1.0.0').lessThanOrEqualTo('1.0.0')).toBeTrue();
+            });
+        });
+
+        describe('when passed 2.3.3 to the first function and 1.0.1 to the second', () => {
+            it('returns false', () => {
+                expect(is('2.3.3').lessThanOrEqualTo('1.0.1')).toBeFalse();
+            });
+        });
+
+        describe('when passed 0.1.3 to the first function and 0.5.5 to the second', () => {
+            it('returns true', () => {
+                expect(is('0.1.3').lessThanOrEqualTo('0.5.5')).toBeTrue();
+            });
+        });
+    });
 });
