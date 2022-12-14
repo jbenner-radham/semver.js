@@ -16,7 +16,7 @@
   "license": "MIT",
   "author": "James Benner <james.benner@gmail.com> (https://www.jamesbenner.com/)",
   "type": "module",
-  "main": "lib/index.js",
+  "exports": "./lib/index.js",
   "directories": {
     "lib": "lib",
     "test": "test"
