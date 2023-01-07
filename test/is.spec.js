@@ -58,6 +58,24 @@ describe('is', () => {
                 expect(is('0.5.1').greaterThan('0.5.2')).toBeFalse();
             });
         });
+
+        describe('when passed 1.0.0 to the first function and 1.0.0-beta to the second', () => {
+            it('returns true', () => {
+                expect(is('1.0.0').greaterThan('1.0.0-beta')).toBeTrue();
+            });
+        });
+
+        describe('when passed 1.0.0-beta to the first function and 1.0.0 to the second', () => {
+            it('returns false', () => {
+                expect(is('1.0.0-beta').greaterThan('1.0.0')).toBeFalse();
+            });
+        });
+
+        describe('when passed 1.0.0-rc.2 to the first function and 1.0.0-beta.11 to the second', () => {
+            it('returns true', () => {
+                expect(is('1.0.0-rc.2').greaterThan('1.0.0-beta.11')).toBeTrue();
+            });
+        });
     });
 
     describe('#greaterThanOrEqualTo', () => {
