@@ -17,7 +17,7 @@ is('1.0.0').equalTo('1.0.0'); // > true
 is('0.8.5').greaterThan('1.0.0'); // > false
 is('2.1.3').greaterThanOrEqualTo('1.5.2'); // > true
 is('0.0.23').lessThan('0.0.38'); // > true
-is('1.6.8').lessThanOrEqualTo('1.4.0'); // > false
+is('1.6.8').lessThanOrEqualTo('1.6.8-beta.1'); // > false
 ```
 
 Reference
