@@ -25,8 +25,8 @@ describe('parse', () => {
             expect(parse(VERSION).patch).toEqual(0);
         });
 
-        it('returns an empty preRelease property', () => {
-            expect(parse(VERSION).preRelease).toEqual('');
+        it('returns an empty prerelease property', () => {
+            expect(parse(VERSION).prerelease).toEqual('');
         });
 
         it('returns an empty build property', () => {
@@ -49,8 +49,8 @@ describe('parse', () => {
             expect(parse(VERSION).patch).toEqual(2);
         });
 
-        it('returns an empty preRelease property', () => {
-            expect(parse(VERSION).preRelease).toEqual('');
+        it('returns an empty prerelease property', () => {
+            expect(parse(VERSION).prerelease).toEqual('');
         });
 
         it('returns an empty build property', () => {
@@ -73,8 +73,8 @@ describe('parse', () => {
             expect(parse(VERSION).patch).toEqual(5);
         });
 
-        it('returns the preRelease property', () => {
-            expect(parse(VERSION).preRelease).toEqual('rc.1');
+        it('returns the prerelease property', () => {
+            expect(parse(VERSION).prerelease).toEqual('rc.1');
         });
 
         it('returns an empty build property', () => {
@@ -97,8 +97,8 @@ describe('parse', () => {
             expect(parse(VERSION).patch).toEqual(2);
         });
 
-        it('returns the preRelease property', () => {
-            expect(parse(VERSION).preRelease).toEqual('beta.2');
+        it('returns the prerelease property', () => {
+            expect(parse(VERSION).prerelease).toEqual('beta.2');
         });
 
         it('returns the build property', () => {
@@ -121,8 +121,8 @@ describe('parse', () => {
             expect(parse(VERSION).patch).toEqual(1);
         });
 
-        it('returns an empty preRelease property', () => {
-            expect(parse(VERSION).preRelease).toEqual('');
+        it('returns an empty prerelease property', () => {
+            expect(parse(VERSION).prerelease).toEqual('');
         });
 
         it('returns the build property', () => {
