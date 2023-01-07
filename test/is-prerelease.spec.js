@@ -153,4 +153,92 @@ describe('isPrerelease', () => {
             });
         });
     });
+
+    describe('#lessThan', () => {
+        it('is a function', () => {
+            expect(isPrerelease('alpha').lessThan).toBeFunction();
+        });
+
+        it('returns a boolean', () => {
+            expect(isPrerelease('alpha').lessThan('alpha')).toBeBoolean();
+        });
+
+        describe('when passed "alpha" to both functions', () => {
+            it('returns false', () => {
+                expect(isPrerelease('alpha').lessThan('alpha')).toBeFalse();
+            });
+        });
+
+        describe('when passed "alpha" to the first function and "alpha.1" to the second', () => {
+            it('returns true', () => {
+                expect(isPrerelease('alpha').lessThan('alpha.1')).toBeTrue();
+            });
+        });
+
+        describe('when passed "alpha.1" to the first function and "alpha.beta" to the second', () => {
+            it('returns true', () => {
+                expect(isPrerelease('alpha.1').lessThan('alpha.beta')).toBeTrue();
+            });
+        });
+
+        describe('when passed "alpha.beta" to the first function and "beta" to the second', () => {
+            it('returns true', () => {
+                expect(isPrerelease('alpha.beta').lessThan('beta')).toBeTrue();
+            });
+        });
+
+        describe('when passed "beta" to the first function and "beta.2" to the second', () => {
+            it('returns true', () => {
+                expect(isPrerelease('beta').lessThan('beta.2')).toBeTrue();
+            });
+        });
+
+        describe('when passed "beta.2" to the first function and "beta.11" to the second', () => {
+            it('returns true', () => {
+                expect(isPrerelease('beta.2').lessThan('beta.11')).toBeTrue();
+            });
+        });
+
+        describe('when passed "beta.11" to the first function and "rc.1" to the second', () => {
+            it('returns true', () => {
+                expect(isPrerelease('beta.11').lessThan('rc.1')).toBeTrue();
+            });
+        });
+
+        describe('when passed "alpha.1" to the first function and "alpha" to the second', () => {
+            it('returns false', () => {
+                expect(isPrerelease('alpha.1').lessThan('alpha')).toBeFalse();
+            });
+        });
+
+        describe('when passed "alpha.beta" to the first function and "alpha.1" to the second', () => {
+            it('returns false', () => {
+                expect(isPrerelease('alpha.beta').lessThan('alpha.1')).toBeFalse();
+            });
+        });
+
+        describe('when passed "beta" to the first function and "alpha.beta" to the second', () => {
+            it('returns false', () => {
+                expect(isPrerelease('beta').lessThan('alpha.beta')).toBeFalse();
+            });
+        });
+
+        describe('when passed "beta.2" to the first function and "beta" to the second', () => {
+            it('returns false', () => {
+                expect(isPrerelease('beta.2').lessThan('beta')).toBeFalse();
+            });
+        });
+
+        describe('when passed "beta.11" to the first function and "beta.2" to the second', () => {
+            it('returns false', () => {
+                expect(isPrerelease('beta.11').lessThan('beta.2')).toBeFalse();
+            });
+        });
+
+        describe('when passed "rc.1" to the first function and "beta.111" to the second', () => {
+            it('returns false', () => {
+                expect(isPrerelease('rc.1').lessThan('beta.11')).toBeFalse();
+            });
+        });
+    });
 });
