@@ -125,4 +125,32 @@ describe('isPrerelease', () => {
             });
         });
     });
+
+    describe('#greaterThanOrEqualTo', () => {
+        it('is a function', () => {
+            expect(isPrerelease('alpha').greaterThanOrEqualTo).toBeFunction();
+        });
+
+        it('returns a boolean', () => {
+            expect(isPrerelease('alpha').greaterThanOrEqualTo('alpha')).toBeBoolean();
+        });
+
+        describe('when passed "alpha" to both functions', () => {
+            it('returns true', () => {
+                expect(isPrerelease('alpha').greaterThanOrEqualTo('alpha')).toBeTrue();
+            });
+        });
+
+        describe('when passed "alpha.beta" to the first function and "beta" to the second', () => {
+            it('returns false', () => {
+                expect(isPrerelease('alpha.beta').greaterThanOrEqualTo('beta')).toBeFalse();
+            });
+        });
+
+        describe('when passed "rc.1" to the first function and "beta.111" to the second', () => {
+            it('returns true', () => {
+                expect(isPrerelease('rc.1').greaterThanOrEqualTo('beta.11')).toBeTrue();
+            });
+        });
+    });
 });
