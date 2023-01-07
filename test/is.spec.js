@@ -132,6 +132,24 @@ describe('is', () => {
                 expect(is('1.1.1').lessThan('1.0.1')).toBeFalse();
             });
         });
+
+        describe('when passed 1.0.0 to the first function and 1.0.0-beta to the second', () => {
+            it('returns false', () => {
+                expect(is('1.0.0').lessThan('1.0.0-beta')).toBeFalse();
+            });
+        });
+
+        describe('when passed 1.0.0-beta to the first function and 1.0.0 to the second', () => {
+            it('returns true', () => {
+                expect(is('1.0.0-beta').lessThan('1.0.0')).toBeTrue();
+            });
+        });
+
+        describe('when passed 1.0.0-rc.2 to the first function and 1.0.0-beta.11 to the second', () => {
+            it('returns false', () => {
+                expect(is('1.0.0-rc.2').lessThan('1.0.0-beta.11')).toBeFalse();
+            });
+        });
     });
 
     describe('#lessThanOrEqualTo', () => {
