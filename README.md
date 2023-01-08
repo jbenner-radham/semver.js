@@ -11,7 +11,7 @@ This library doesn't use RegEx at all. Meaning that it's immune to [ReDoS](https
 Usage
 -----
 ```js
-import is from '@radham/semver';
+import { is } from '@radham/semver';
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 is('0.5.5-rc.1').valid(); // > true
