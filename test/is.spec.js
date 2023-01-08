@@ -179,4 +179,26 @@ describe('is', () => {
             });
         });
     });
+
+    describe('#valid', () => {
+        it('is a function', () => {
+            expect(is('1.0.0').valid).toBeFunction();
+        });
+
+        it('returns a boolean', () => {
+            expect(is('1.0.0').valid()).toBeBoolean();
+        });
+
+        describe('when passed 1.0.0', () => {
+            it('returns true', () => {
+                expect(is('1.0.0').valid()).toBeTrue();
+            });
+        });
+
+        describe('when passed a.0.0', () => {
+            it('returns false', () => {
+                expect(is('a.0.0').valid()).toBeFalse();
+            });
+        });
+    });
 });
