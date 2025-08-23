@@ -11,7 +11,7 @@ This library doesn't use RegEx at all. Meaning that it's immune to [ReDoS](https
 Usage
 -----
 ```js
-import { is } from '@radham/semver';
+import { is, parse } from '@radham/semver';
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 is('0.5.5-rc.1').valid(); // > true
@@ -20,6 +20,15 @@ is('0.8.5').greaterThan('1.0.0'); // > false
 is('2.1.3').greaterThanOrEqualTo('1.5.2'); // > true
 is('0.0.23').lessThan('0.0.38'); // > true
 is('1.6.8').lessThanOrEqualTo('1.6.8-beta.1'); // > false
+
+parse('v1.5.2-beta.2+fe523');
+// > {
+// >   major: 1,
+// >   minor: 5,
+// >   patch: 2,
+// >   prerelease: 'beta.2',
+// >   build: 'fe523'
+// > }
 ```
 
 Reference
