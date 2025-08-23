@@ -8,6 +8,12 @@ Why Another SemVer Library?
 ---------------------------
 This library doesn't use RegEx at all. Meaning that it's immune to [ReDoS](https://en.wikipedia.org/wiki/ReDoS) attacks. Is that a big deal? Honestly, I'll leave that up to you to decide. Another reason is that I felt the APIs of the available SemVer packages could be more semantic, so I figured I'd try my hand at it while keeping the package at zero dependencies.
 
+Install
+-------
+```sh
+npm install @radham/semver
+```
+
 Usage
 -----
 ```js
