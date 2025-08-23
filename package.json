@@ -25,7 +25,7 @@
     "lint": "eslint . --ext .js --ignore-path .gitignore",
     "prepare": "husky install",
     "test": "vitest --watch=false",
-    "test:watch": "npm test -- --watchAll"
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
