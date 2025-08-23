@@ -47,7 +47,7 @@ Prior Art
 
 License
 -------
-The MIT License. See the [license file](LICENSE) for details.
+The BSD 3-Clause License (Revised). See the [license file](LICENSE) for details.
 
 [CI BADGE]: https://github.com/jbenner-radham/semver.js/actions/workflows/ci.yaml/badge.svg
 [CI PAGE]: https://github.com/jbenner-radham/semver.js/actions/workflows/ci.yaml

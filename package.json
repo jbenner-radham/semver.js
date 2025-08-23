@@ -18,7 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/jbenner-radham/semver.js.git"
   },
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "author": "James Benner <hello@jamesbenner.com> (https://www.jamesbenner.com/)",
   "type": "module",
   "exports": "./lib/index.js",
