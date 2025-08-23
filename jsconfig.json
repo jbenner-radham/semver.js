@@ -1,8 +1,0 @@
-{
-    "compilerOptions": {
-        "module": "ES2015",
-        "target": "ESNext",
-        "checkJs": true
-    },
-    "include": ["lib/**/*"]
-}

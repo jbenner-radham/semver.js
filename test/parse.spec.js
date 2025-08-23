@@ -1,13 +1,13 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { parse } from '../lib/index.js';
 
 describe('parse', () => {
     it('is a function', () => {
-        expect(parse).toBeFunction();
+        expect(parse).toBeTypeOf('function');
     });
 
     it('returns an object', () => {
-        expect(parse()).toBeObject();
+        expect(parse()).toBeTypeOf('object');
     });
 
     describe('when passed v1.0.0', () => {
