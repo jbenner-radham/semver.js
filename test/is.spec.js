@@ -180,6 +180,50 @@ describe('is', () => {
         });
     });
 
+    describe('#stable', () => {
+        it('is a function', () => {
+            expect(is('1.0.0').stable).toBeTypeOf('function');
+        });
+
+        it('returns a boolean', () => {
+            expect(is('1.0.0').stable()).toBeTypeOf('boolean');
+        });
+
+        describe('when passed 1.0.0', () => {
+            it('returns true', () => {
+                expect(is('1.0.0').stable()).toBe(true);
+            });
+        });
+
+        describe('when passed 0.1.0', () => {
+            it('returns true', () => {
+                expect(is('0.1.0').stable()).toBe(false);
+            });
+        });
+    });
+
+    describe('#unstable', () => {
+        it('is a function', () => {
+            expect(is('0.1.0').unstable).toBeTypeOf('function');
+        });
+
+        it('returns a boolean', () => {
+            expect(is('0.1.0').unstable()).toBeTypeOf('boolean');
+        });
+
+        describe('when passed 0.1.0', () => {
+            it('returns true', () => {
+                expect(is('0.1.0').unstable()).toBe(true);
+            });
+        });
+
+        describe('when passed 1.0.0', () => {
+            it('returns false', () => {
+                expect(is('1.0.0').unstable()).toBe(false);
+            });
+        });
+    });
+
     describe('#valid', () => {
         it('is a function', () => {
             expect(is('1.0.0').valid).toBeTypeOf('function');

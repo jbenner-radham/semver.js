@@ -21,6 +21,8 @@ import { is, parse } from '@radham/semver';
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 is('0.5.5-rc.1').valid(); // > true
+is('1.0.0').stable(); // > true
+is('0.1.0').unstable(); // > true
 is('1.0.0').equalTo('1.0.0'); // > true
 is('0.8.5').greaterThan('1.0.0'); // > false
 is('2.1.3').greaterThanOrEqualTo('1.5.2'); // > true
