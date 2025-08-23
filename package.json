@@ -28,7 +28,6 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
     "eslint": "^8.29.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.2",
