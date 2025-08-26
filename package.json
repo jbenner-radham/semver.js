@@ -31,7 +31,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "lint": "eslint . --ext .js --ignore-path .gitignore",
+    "lint": "eslint .",
     "prepare": "husky install",
     "test": "vitest --watch=false",
     "test:watch": "vitest"
