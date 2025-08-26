@@ -35,7 +35,8 @@ parse('v1.5.2-beta.2+fe523');
 // >   minor: 5,
 // >   patch: 2,
 // >   prerelease: 'beta.2',
-// >   build: 'fe523'
+// >   build: 'fe523',
+// >   coreVersion: '1.5.2'
 // > }
 ```
 

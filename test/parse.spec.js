@@ -32,6 +32,10 @@ describe('parse', () => {
     it('returns an empty build property', () => {
       expect(parse(VERSION).build).toEqual('');
     });
+
+    it('returns the core version property', () => {
+      expect(parse(VERSION).coreVersion).toEqual('1.0.0');
+    });
   });
 
   describe('when passed 0.3.2', () => {
@@ -55,6 +59,10 @@ describe('parse', () => {
 
     it('returns an empty build property', () => {
       expect(parse(VERSION).build).toEqual('');
+    });
+
+    it('returns the core version property', () => {
+      expect(parse(VERSION).coreVersion).toEqual('0.3.2');
     });
   });
 
@@ -80,6 +88,10 @@ describe('parse', () => {
     it('returns an empty build property', () => {
       expect(parse(VERSION).build).toEqual('');
     });
+
+    it('returns the core version property', () => {
+      expect(parse(VERSION).coreVersion).toEqual('1.0.5');
+    });
   });
 
   describe('when passed v1.5.2-beta.2+fe523', () => {
@@ -104,6 +116,10 @@ describe('parse', () => {
     it('returns the build property', () => {
       expect(parse(VERSION).build).toEqual('fe523');
     });
+
+    it('returns the core version property', () => {
+      expect(parse(VERSION).coreVersion).toEqual('1.5.2');
+    });
   });
 
   describe('when passed 5.0.1+exp.sha.5114f85', () => {
@@ -127,6 +143,10 @@ describe('parse', () => {
 
     it('returns the build property', () => {
       expect(parse(VERSION).build).toEqual('exp.sha.5114f85');
+    });
+
+    it('returns the core version property', () => {
+      expect(parse(VERSION).coreVersion).toEqual('5.0.1');
     });
   });
 });
