@@ -33,8 +33,8 @@ describe('parse', () => {
       expect(parse(VERSION).build).toEqual('');
     });
 
-    it('returns the core version property', () => {
-      expect(parse(VERSION).coreVersion).toEqual('1.0.0');
+    it('returns the version core property', () => {
+      expect(parse(VERSION).versionCore).toEqual('1.0.0');
     });
   });
 
@@ -61,8 +61,8 @@ describe('parse', () => {
       expect(parse(VERSION).build).toEqual('');
     });
 
-    it('returns the core version property', () => {
-      expect(parse(VERSION).coreVersion).toEqual('0.3.2');
+    it('returns the version core property', () => {
+      expect(parse(VERSION).versionCore).toEqual('0.3.2');
     });
   });
 
@@ -89,8 +89,8 @@ describe('parse', () => {
       expect(parse(VERSION).build).toEqual('');
     });
 
-    it('returns the core version property', () => {
-      expect(parse(VERSION).coreVersion).toEqual('1.0.5');
+    it('returns the version core property', () => {
+      expect(parse(VERSION).versionCore).toEqual('1.0.5');
     });
   });
 
@@ -117,8 +117,8 @@ describe('parse', () => {
       expect(parse(VERSION).build).toEqual('fe523');
     });
 
-    it('returns the core version property', () => {
-      expect(parse(VERSION).coreVersion).toEqual('1.5.2');
+    it('returns the version core property', () => {
+      expect(parse(VERSION).versionCore).toEqual('1.5.2');
     });
   });
 
@@ -145,8 +145,8 @@ describe('parse', () => {
       expect(parse(VERSION).build).toEqual('exp.sha.5114f85');
     });
 
-    it('returns the core version property', () => {
-      expect(parse(VERSION).coreVersion).toEqual('5.0.1');
+    it('returns the version core property', () => {
+      expect(parse(VERSION).versionCore).toEqual('5.0.1');
     });
   });
 });
