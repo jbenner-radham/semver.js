@@ -1,4 +1,4 @@
-import isPrerelease from '../lib/is-prerelease.js';
+import isPrerelease from '../src/is-prerelease.js';
 import { describe, expect, it } from 'vitest';
 
 describe('isPrerelease', () => {

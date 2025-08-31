@@ -16,7 +16,7 @@ export default function parse(value = '') {
     prerelease: '',
     build: ''
   };
-  const errors = [];
+  const errors: TypeError[] = [];
   const chars = [...(value.startsWith('v') ? value.replace('v', '') : value)];
 
   chars.forEach(char => {

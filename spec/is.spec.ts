@@ -1,4 +1,4 @@
-import { is } from '../lib/index.js';
+import { is } from '../src/index.js';
 import { describe, expect, it } from 'vitest';
 
 describe('is', () => {

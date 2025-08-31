@@ -1,4 +1,4 @@
-import isIntLike from '../lib/is-int-like.js';
+import isIntLike from '../src/is-int-like.js';
 import { describe, expect, it } from 'vitest';
 
 describe('isIntLike', () => {
@@ -7,7 +7,7 @@ describe('isIntLike', () => {
   });
 
   it('returns a boolean', () => {
-    expect(isIntLike()).toBeTypeOf('boolean');
+    expect(isIntLike('1')).toBeTypeOf('boolean');
   });
 
   it('returns true when passed an integer', () => {

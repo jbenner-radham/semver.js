@@ -12,11 +12,10 @@ const gitignorePath = path.resolve(dirname, '.gitignore');
 export default defineConfig([
   includeIgnoreFile(gitignorePath),
   {
-    files: ['**/*.js', '!eslint.config.js'],
-    languageOptions: { globals: globals.browser }
+    files: ['**/*.ts']
   },
   {
-    files: ['eslint-config.js'],
+    files: ['**/*.mjs'],
     languageOptions: { globals: globals.node }
   },
   {
