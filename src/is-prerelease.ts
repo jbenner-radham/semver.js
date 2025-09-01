@@ -1,7 +1,7 @@
 import { ASCII_SORT_ORDER } from './constants.js';
 import parsePrerelease from './parse-prerelease.js';
 
-function getLongestLength(a = [], b = []) {
+function getLongestLength(a: (number | string)[] = [], b: (number | string)[] = []): number {
   if (a.length === b.length) {
     return a.length;
   }
@@ -13,13 +13,11 @@ function getLongestLength(a = [], b = []) {
   return b.length;
 }
 
-/**
- * Determine if a value is a string.
- *
- * @param {*} value
- * @returns {value is string}
- */
-function isString(value) {
+function isInteger(value: unknown): value is number {
+  return Number.isInteger(value);
+}
+
+function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
@@ -49,7 +47,7 @@ class PrereleaseComparator {
       }
 
       // > Identifiers consisting of only digits are compared numerically.
-      if (Number.isInteger(subjectIdentifier) && Number.isInteger(comparisonIdentifier)) {
+      if (isInteger(subjectIdentifier) && isInteger(comparisonIdentifier)) {
         return subjectIdentifier > comparisonIdentifier;
       }
 
@@ -74,8 +72,8 @@ class PrereleaseComparator {
             return false;
           }
 
-          const subjectSortIndex = ASCII_SORT_ORDER.indexOf(subjectChar);
-          const comparisonSortIndex = ASCII_SORT_ORDER.indexOf(comparisonChar);
+          const subjectSortIndex = ASCII_SORT_ORDER.indexOf(subjectChar!);
+          const comparisonSortIndex = ASCII_SORT_ORDER.indexOf(comparisonChar!);
 
           if (subjectSortIndex === comparisonSortIndex) {
             continue;
@@ -86,11 +84,11 @@ class PrereleaseComparator {
       }
 
       // > Numeric identifiers always have lower precedence than non-numeric identifiers.
-      if (isString(subjectIdentifier) && Number.isInteger(comparisonIdentifier)) {
+      if (isString(subjectIdentifier) && isInteger(comparisonIdentifier)) {
         return true;
       }
 
-      if (Number.isInteger(subjectIdentifier) && isString(comparisonIdentifier)) {
+      if (isInteger(subjectIdentifier) && isString(comparisonIdentifier)) {
         return false;
       }
 

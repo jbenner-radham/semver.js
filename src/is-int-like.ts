@@ -1,9 +1,9 @@
-export default function isIntLike(value) {
+export default function isIntLike(value: unknown): boolean {
   if (Number.isNaN(value)) {
     return false;
   }
 
-  const parsedInt = Number.parseInt(value);
+  const parsedInt = Number.parseInt(value as string);
 
   // Handle floats in a string.
   if (typeof value === 'string' && `${parsedInt}` !== value) {

@@ -3,7 +3,9 @@
   "version": "0.3.0",
   "description": "A library for parsing and working with Semantic Versioning.",
   "keywords": [
+    "compare",
     "comparator",
+    "parse",
     "parser",
     "semantic",
     "semver",
@@ -21,19 +23,27 @@
   "license": "BSD-3-Clause",
   "author": "James Benner <hello@jamesbenner.com> (https://www.jamesbenner.com/)",
   "type": "module",
-  "exports": "./lib/index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
+  "exports": {
+    "require": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/cjs/index.js"
+    },
+    "import": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/esm/index.js"
+    }
   },
   "files": [
-    "lib",
+    "dist",
     "CHANGELOG.md"
   ],
   "scripts": {
+    "prebuild": "rimraf ./dist",
+    "build": "node ./scripts/build.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prepare": "husky install",
+    "prepublishOnly": "pnpm run build",
     "test": "vitest --watch=false",
     "test:watch": "vitest"
   },
@@ -42,12 +52,16 @@
     "@eslint/js": "^9.34.0",
     "@radham/eslint-config": "^2.0.0",
     "@stylistic/eslint-plugin": "^5.2.3",
+    "esbuild": "^0.25.9",
     "eslint": "^9.34.0",
     "eslint-plugin-sort": "^4.0.0",
+    "execa": "^9.6.0",
     "globals": "^16.3.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
+    "rimraf": "^6.0.1",
     "sort-package-json": "^2.1.0",
+    "typescript": "^5.9.2",
     "typescript-eslint": "^8.41.0",
     "vitest": "^3.2.4"
   },

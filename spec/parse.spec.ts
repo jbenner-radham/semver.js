@@ -1,4 +1,4 @@
-import { parse } from '../lib/index.js';
+import { parse } from '../src/index.js';
 import { describe, expect, it } from 'vitest';
 
 describe('parse', () => {
