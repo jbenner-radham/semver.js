@@ -108,11 +108,8 @@ class Comparator {
       }
 
       return (
-        typeof subject.major === 'number' &&
         !Number.isNaN(subject.major) &&
-        typeof subject.minor === 'number' &&
         !Number.isNaN(subject.minor) &&
-        typeof subject.patch === 'number' &&
         !Number.isNaN(subject.patch)
       );
     } catch (_) {
