@@ -5,11 +5,11 @@ import parsePrerelease from './parse-prerelease.js';
 class Comparator {
   #version = '';
 
-  constructor(version = '') {
+  constructor(version: string) {
     this.#version = version;
   }
 
-  #getComparableVersionString(version = '') {
+  #getComparableVersionString(version: string): string {
     // > Build metadata MUST be ignored when determining version precedence.
     const { major, minor, patch, prerelease } = parse(version);
 
@@ -18,14 +18,14 @@ class Comparator {
       : `${major}.${minor}.${patch}`;
   }
 
-  equalTo(version = '') {
+  equalTo(version: string): boolean {
     const subject = this.#getComparableVersionString(this.#version);
     const comparison = this.#getComparableVersionString(version);
 
     return subject === comparison;
   }
 
-  greaterThan(version = '') {
+  greaterThan(version: string): boolean {
     const subject = parse(this.#version);
     const comparison = parse(version);
 
@@ -52,11 +52,11 @@ class Comparator {
     );
   }
 
-  greaterThanOrEqualTo(version = '') {
+  greaterThanOrEqualTo(version: string): boolean {
     return this.greaterThan(version) || this.equalTo(version);
   }
 
-  lessThan(version = '') {
+  lessThan(version: string): boolean {
     const subject = parse(this.#version);
     const comparison = parse(version);
 
@@ -83,23 +83,23 @@ class Comparator {
     );
   }
 
-  lessThanOrEqualTo(version = '') {
+  lessThanOrEqualTo(version: string): boolean {
     return this.lessThan(version) || this.equalTo(version);
   }
 
-  stable() {
+  stable(): boolean {
     const { major } = parse(this.#version);
 
     return major > 0;
   }
 
-  unstable() {
+  unstable(): boolean {
     const { major } = parse(this.#version);
 
     return major === 0;
   }
 
-  valid() {
+  valid(): boolean {
     try {
       const subject = parse(this.#version);
 
@@ -121,6 +121,6 @@ class Comparator {
   }
 }
 
-export default function is(version = '') {
+export default function is(version: string): Comparator {
   return new Comparator(version);
 }
