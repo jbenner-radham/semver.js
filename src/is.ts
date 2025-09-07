@@ -24,6 +24,9 @@ class Comparator {
     return subject === comparison;
   }
 
+  /**
+   * Shorthand convenience method for `.equalTo(...)`.
+   */
   eq(version: string): boolean {
     return this.equalTo(version);
   }
@@ -55,6 +58,9 @@ class Comparator {
     );
   }
 
+  /**
+   * Shorthand convenience method for `.greaterThan(...)`.
+   */
   gt(version: string): boolean {
     return this.greaterThan(version);
   }
@@ -63,6 +69,9 @@ class Comparator {
     return this.greaterThan(version) || this.equalTo(version);
   }
 
+  /**
+   * Shorthand convenience method for `.greaterThanOrEqualTo(...)`.
+   */
   gte(version: string): boolean {
     return this.greaterThanOrEqualTo(version);
   }
@@ -94,6 +103,9 @@ class Comparator {
     );
   }
 
+  /**
+   * Shorthand convenience method for `.lessThan(...)`.
+   */
   lt(version: string): boolean {
     return this.lessThan(version);
   }
@@ -102,6 +114,9 @@ class Comparator {
     return this.lessThan(version) || this.equalTo(version);
   }
 
+  /**
+   * Shorthand convenience method for `.lessThanOrEqualTo(...)`.
+   */
   lte(version: string): boolean {
     return this.lessThanOrEqualTo(version);
   }
