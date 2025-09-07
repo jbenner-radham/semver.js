@@ -24,6 +24,10 @@ class Comparator {
     return subject === comparison;
   }
 
+  eq(version: string): boolean {
+    return this.equalTo(version);
+  }
+
   greaterThan(version: string): boolean {
     const subject = parse(this.#version);
     const comparison = parse(version);
@@ -51,8 +55,16 @@ class Comparator {
     );
   }
 
+  gt(version: string): boolean {
+    return this.greaterThan(version);
+  }
+
   greaterThanOrEqualTo(version: string): boolean {
     return this.greaterThan(version) || this.equalTo(version);
+  }
+
+  gte(version: string): boolean {
+    return this.greaterThanOrEqualTo(version);
   }
 
   lessThan(version: string): boolean {
@@ -82,8 +94,16 @@ class Comparator {
     );
   }
 
+  lt(version: string): boolean {
+    return this.lessThan(version);
+  }
+
   lessThanOrEqualTo(version: string): boolean {
     return this.lessThan(version) || this.equalTo(version);
+  }
+
+  lte(version: string): boolean {
+    return this.lessThanOrEqualTo(version);
   }
 
   stable(): boolean {
