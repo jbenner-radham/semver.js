@@ -121,12 +121,18 @@ class Comparator {
     return this.lessThanOrEqualTo(version);
   }
 
+  /**
+   * Is the major version greater than zero.
+   */
   stable(): boolean {
     const { major } = parse(this.#version);
 
     return major > 0;
   }
 
+  /**
+   * Is the major version equal to zero.
+   */
   unstable(): boolean {
     const { major } = parse(this.#version);
 
