@@ -1,6 +1,5 @@
 import isPrerelease from './is-prerelease.js';
 import parse from './parse.js';
-import parsePrerelease from './parse-prerelease.js';
 
 class Comparator {
   #version = '';
@@ -102,10 +101,6 @@ class Comparator {
   valid(): boolean {
     try {
       const subject = parse(this.#version);
-
-      if (subject.prerelease.length) {
-        parsePrerelease(subject.prerelease);
-      }
 
       return (
         !Number.isNaN(subject.major) &&

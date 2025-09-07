@@ -1,5 +1,6 @@
-import { VALID_PRERELEASE_AND_BUILD_CHARS } from './constants.js';
 import isIntLike from './is-int-like.js';
+import parseBuild from './parse-build';
+import parsePrerelease from './parse-prerelease';
 
 export default function parse(value = '') {
   const status = {
@@ -91,12 +92,6 @@ export default function parse(value = '') {
     }
 
     if (status.atPrerelease && char !== '+') {
-      if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
-        errors.push(new TypeError(`The character "${char}" is not a valid pre-release character`));
-
-        return;
-      }
-
       buffer.prerelease += char;
 
       return;
@@ -110,17 +105,35 @@ export default function parse(value = '') {
     }
 
     if (status.atBuild) {
-      if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
-        errors.push(new TypeError(`The character "${char}" is not a valid build character`));
-
-        return;
-      }
-
       buffer.build += char;
 
       return;
     }
   });
+
+  if (buffer.prerelease.length) {
+    try {
+      parsePrerelease(buffer.prerelease);
+    } catch (error) {
+      if (error instanceof AggregateError) {
+        errors.push(...error.errors);
+      } else if (error instanceof TypeError) {
+        errors.push(error);
+      }
+    }
+  }
+
+  if (buffer.build.length) {
+    try {
+      parseBuild(buffer.build);
+    } catch (error) {
+      if (error instanceof AggregateError) {
+        errors.push(...error.errors);
+      } else if (error instanceof TypeError) {
+        errors.push(error);
+      }
+    }
+  }
 
   if (errors.length === 1) {
     const [error] = errors;
@@ -131,7 +144,7 @@ export default function parse(value = '') {
   if (errors.length > 1) {
     throw new AggregateError(
       errors,
-      `Multiple TypeErrors were encountered when parsing the version ${value}`
+      `Multiple TypeErrors were encountered when parsing the version "${value}"`
     );
   }
 
