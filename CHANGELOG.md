@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A `SemanticVersion` type to represent the result of the `parse(...)` function.
 - A `SPEC_VERSION` constant which identifies which version of the SemVer spec this module implements.
 
 [0.6.0] - 2025-09-07
