@@ -1,7 +1,7 @@
 @radham/semver
 ==============
 [![CI Status][CI BADGE]][CI PAGE]
-[![Supported Node.js Version][NODE BADGE]][NODE PAGE]
+[![Supported Node.js Version(s)][NODE BADGE]][NODE PAGE]
 
 A library for parsing and working with [Semantic Versioning](https://semver.org/).
 
