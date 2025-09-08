@@ -2,7 +2,16 @@ import isIntLike from './is-int-like.js';
 import parseBuild from './parse-build';
 import parsePrerelease from './parse-prerelease';
 
-export default function parse(value = '') {
+export type SemanticVersion = {
+  major: number;
+  minor: number;
+  patch: number;
+  prerelease: string;
+  build: string;
+  versionCore: string;
+};
+
+export default function parse(value = ''): SemanticVersion {
   const status = {
     atMajor: true,
     atMinor: false,
