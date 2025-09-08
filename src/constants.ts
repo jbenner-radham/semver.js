@@ -68,6 +68,11 @@ export const ASCII_SORT_ORDER = [
 ];
 
 /**
+ * The implemented SemVer specification version.
+ */
+export const SPEC_VERSION = '2.0.0';
+
+/**
  * @see https://semver.org/spec/v2.0.0.html#backusnaur-form-grammar-for-valid-semver-versions
  */
 export const VALID_PRERELEASE_AND_BUILD_CHARS = [
