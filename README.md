@@ -1,6 +1,7 @@
 @radham/semver
 ==============
 [![CI Status][CI BADGE]][CI PAGE]
+[![Supported Node.js Version][NODE BADGE]][NODE PAGE]
 
 A library for parsing and working with [Semantic Versioning](https://semver.org/).
 
@@ -106,3 +107,5 @@ The BSD 3-Clause License. See the [license file](LICENSE) for details.
 
 [CI BADGE]: https://github.com/jbenner-radham/semver.js/actions/workflows/ci.yaml/badge.svg
 [CI PAGE]: https://github.com/jbenner-radham/semver.js/actions/workflows/ci.yaml
+[NODE BADGE]: https://img.shields.io/node/v/@radham/semver.svg
+[NODE PAGE]: https://nodejs.org/
