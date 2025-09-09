@@ -15,8 +15,8 @@ importers:
         specifier: ^9.34.0
         version: 9.34.0
       '@radham/eslint-config':
-        specifier: ^2.0.0
-        version: 2.0.0(@eslint/js@9.34.0)(@stylistic/eslint-plugin@5.2.3(eslint@9.34.0))(eslint-plugin-sort@4.0.0(eslint@9.34.0)(typescript@5.9.2))(eslint@9.34.0)(typescript-eslint@8.41.0(eslint@9.34.0)(typescript@5.9.2))
+        specifier: ^3.0.0
+        version: 3.0.0(@eslint/js@9.34.0)(@stylistic/eslint-plugin@5.2.3(eslint@9.34.0))(eslint-plugin-sort@4.0.0(eslint@9.34.0)(typescript@5.9.2))(eslint@9.34.0)(typescript-eslint@8.41.0(eslint@9.34.0)(typescript@5.9.2))
       '@stylistic/eslint-plugin':
         specifier: ^5.2.3
         version: 5.2.3(eslint@9.34.0)
@@ -309,8 +309,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@radham/eslint-config@2.0.0':
-    resolution: {integrity: sha512-rBwRZuelYu/o8haSO+BeRKvNYIW33/zZDcRb8uDCLYGTox7uh61Vecew654TNroDa7LriDreVhUxlDrbort/tg==}
+  '@radham/eslint-config@3.0.0':
+    resolution: {integrity: sha512-pKIYwPZJO4xMYnuHdF9PWl4kM1dJNPAK8AJUYfDczJrFQgnSuInbS0W7Gf8g/eWbhMMxme5kh1KKqZYRoP2GeQ==}
     peerDependencies:
       '@eslint/js': '>=9'
       '@stylistic/eslint-plugin': '>=5'
@@ -1839,7 +1839,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@radham/eslint-config@2.0.0(@eslint/js@9.34.0)(@stylistic/eslint-plugin@5.2.3(eslint@9.34.0))(eslint-plugin-sort@4.0.0(eslint@9.34.0)(typescript@5.9.2))(eslint@9.34.0)(typescript-eslint@8.41.0(eslint@9.34.0)(typescript@5.9.2))':
+  '@radham/eslint-config@3.0.0(@eslint/js@9.34.0)(@stylistic/eslint-plugin@5.2.3(eslint@9.34.0))(eslint-plugin-sort@4.0.0(eslint@9.34.0)(typescript@5.9.2))(eslint@9.34.0)(typescript-eslint@8.41.0(eslint@9.34.0)(typescript@5.9.2))':
     dependencies:
       '@eslint/js': 9.34.0
       '@stylistic/eslint-plugin': 5.2.3(eslint@9.34.0)
