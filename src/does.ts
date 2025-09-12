@@ -1,6 +1,6 @@
 import {
+  VALID_SPECIFIER_COMPARATOR_CHARS,
   VALID_SPECIFIER_COMPARATORS,
-  VALID_SPECIFIER_PREFIX_OPERATOR_CHARS,
   VALID_SPECIFIER_VERSION_CORE_CHARS
 } from './constants';
 import is from './is';
@@ -25,7 +25,7 @@ function isAnySpecifier(specifier: string): boolean {
 //   let state: State = 'initialization';
 //
 //   chars.forEach(char => {
-//     if (VALID_SPECIFIER_PREFIX_OPERATOR_CHARS.includes(char)) {
+//     if (VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
 //       state = 'is-in-prefix-operator';
 //     } else if (VALID_SPECIFIER_VERSION_CORE_CHARS.includes(char)) {
 //       if (['initialization', 'is-in-whitespace', 'is-in-prefix-operator'].includes(state)) {
@@ -109,7 +109,7 @@ export function getCompositeSpecifiers(specifier: string): string[] {
   let state: State = 'initialization';
 
   chars.forEach(char => {
-    if (VALID_SPECIFIER_PREFIX_OPERATOR_CHARS.includes(char)) {
+    if (VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
       if (state === 'is-in-whitespace') {
         specifiers.push(buffer);
 
@@ -121,7 +121,7 @@ export function getCompositeSpecifiers(specifier: string): string[] {
       const isBufferASpecifierPrefix = (): boolean => {
         const chars = [...buffer.trim()];
 
-        return chars.every(char => VALID_SPECIFIER_PREFIX_OPERATOR_CHARS.includes(char));
+        return chars.every(char => VALID_SPECIFIER_COMPARATOR_CHARS.includes(char));
       };
 
       if (state === 'is-in-whitespace' && !isBufferASpecifierPrefix()) {
@@ -167,7 +167,8 @@ export function getCompositeSpecifiers(specifier: string): string[] {
     specifiers.push(buffer);
   }
 
-  return specifiers.map(specifier => specifier.trim());
+  // return specifiers.map(specifier => specifier.trim());
+  return specifiers.map(normalizeSpecifier);
 }
 
 export function isCompositeSpecifier(specifier: string): boolean {
@@ -182,7 +183,7 @@ function isEqualSpecifier(specifier: string): boolean {
   return specifier.startsWith('=') && is(specifier.replace('=', '')).valid();
 }
 
-function isHyphenatedRangeSpecifier(specifier: string): boolean {
+export function isHyphenatedRangeSpecifier(specifier: string): boolean {
   const hyphen = ' - ';
 
   return !specifier.startsWith(hyphen) && !specifier.endsWith(hyphen) && specifier.includes(hyphen);

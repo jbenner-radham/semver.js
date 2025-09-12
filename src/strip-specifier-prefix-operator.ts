@@ -1,4 +1,4 @@
-import { VALID_SPECIFIER_PREFIX_OPERATOR_CHARS } from './constants';
+import { VALID_SPECIFIER_COMPARATOR_CHARS } from './constants';
 
 export default function stripSpecifierPrefixOperator(specifier: string): string {
   const chars = [...specifier];
@@ -6,11 +6,11 @@ export default function stripSpecifierPrefixOperator(specifier: string): string 
   let isBeforeVersion = true;
 
   for (const char of chars) {
-    if (isBeforeVersion && VALID_SPECIFIER_PREFIX_OPERATOR_CHARS.includes(char)) {
+    if (isBeforeVersion && VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
       continue;
     }
 
-    if (isBeforeVersion && !VALID_SPECIFIER_PREFIX_OPERATOR_CHARS.includes(char)) {
+    if (isBeforeVersion && !VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
       isBeforeVersion = false;
     }
 

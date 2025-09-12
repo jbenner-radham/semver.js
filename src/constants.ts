@@ -152,7 +152,7 @@ export const VALID_SPECIFIER_COMPARATORS = [
   '~'
 ];
 
-export const VALID_SPECIFIER_PREFIX_OPERATOR_CHARS = [
+export const VALID_SPECIFIER_COMPARATOR_CHARS = [
   '<',
   '=',
   '>',
@@ -176,6 +176,9 @@ export const VALID_SPECIFIER_VERSION_CORE_CHARS = [
   'X',
   'x'
 ];
+
+export const VALID_SPECIFIER_VERSION_DIGIT_AND_X_CHARS =
+  VALID_SPECIFIER_VERSION_CORE_CHARS.filter(char => char !== '.');
 
 export const VALID_X_RANGE_CHARS = [
   '*',
