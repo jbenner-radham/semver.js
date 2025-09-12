@@ -1,4 +1,5 @@
 import {
+  VALID_SPECIFIER_COMPARATORS,
   VALID_SPECIFIER_PREFIX_OPERATOR_CHARS,
   VALID_SPECIFIER_VERSION_CORE_CHARS
 } from './constants';
@@ -60,6 +61,37 @@ function isAnySpecifier(specifier: string): boolean {
 //
 //   return count > 1;
 // }
+
+export function normalizeSpecifier(specifier: string): string {
+  const chars = [...specifier.trim()];
+  let buffer = '';
+  let shouldUnconditionallyBuffer = false;
+
+  // Strip whitespace between a comparator and the rest of the version specifier.
+  chars.forEach(char => {
+    if (shouldUnconditionallyBuffer) {
+      buffer += char;
+
+      return;
+    }
+
+    if (char === ' ' && VALID_SPECIFIER_COMPARATORS.includes(buffer.trim())) {
+      return;
+    }
+
+    if (VALID_SPECIFIER_VERSION_CORE_CHARS.includes(char)) {
+      shouldUnconditionallyBuffer = true;
+    }
+
+    buffer += char;
+  });
+
+  // Normalize hyphenated ranges to only include a single space of padding.
+  return buffer
+    .split(' ')
+    .filter(component => component !== '')
+    .join(' ');
+}
 
 export function getCompositeSpecifiers(specifier: string): string[] {
   type State = 'initialization'

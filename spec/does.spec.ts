@@ -1,4 +1,4 @@
-import { getCompositeSpecifiers, isCompositeSpecifier } from '../src/does.js';
+import { getCompositeSpecifiers, isCompositeSpecifier, normalizeSpecifier } from '../src/does.js';
 import { describe, expect, it } from 'vitest';
 
 describe('getCompositeSpecifiers', () => {
@@ -49,5 +49,27 @@ describe('isCompositeSpecifier', () => {
 
   it('returns true for a greater than and less than or equal range with spacing', () => {
     expect(isCompositeSpecifier('> 1.0.0 <= 5.0.0')).toBe(true);
+  });
+});
+
+describe('normalizeSpecifier', () => {
+  it('removes the trailing space on a greater than or equal to comparator', () => {
+    expect(normalizeSpecifier('>= 1.0.0')).toEqual('>=1.0.0');
+  });
+
+  it('removes the trailing space on a less than comparator', () => {
+    expect(normalizeSpecifier('<  1.0.0')).toEqual('<1.0.0');
+  });
+
+  it('removes the trailing space on a caret comparator', () => {
+    expect(normalizeSpecifier('^     1.0.0')).toEqual('^1.0.0');
+  });
+
+  it('removes the trailing space on a tilde comparator', () => {
+    expect(normalizeSpecifier('~ 1.0.0')).toEqual('~1.0.0');
+  });
+
+  it('normalizes the whitespace on hyphenated ranges', () => {
+    expect(normalizeSpecifier('1.0.0   -   5.5.5')).to.toEqual('1.0.0 - 5.5.5');
   });
 });

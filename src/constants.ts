@@ -142,6 +142,16 @@ export const VALID_PRERELEASE_AND_BUILD_CHARS = [
   'z'
 ];
 
+export const VALID_SPECIFIER_COMPARATORS = [
+  '<',
+  '<=',
+  '=',
+  '>',
+  '>=',
+  '^',
+  '~'
+];
+
 export const VALID_SPECIFIER_PREFIX_OPERATOR_CHARS = [
   '<',
   '=',
@@ -163,6 +173,12 @@ export const VALID_SPECIFIER_VERSION_CORE_CHARS = [
   '7',
   '8',
   '9',
+  'X',
+  'x'
+];
+
+export const VALID_X_RANGE_CHARS = [
+  '*',
   'X',
   'x'
 ];
