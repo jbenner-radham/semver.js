@@ -141,3 +141,40 @@ export const VALID_PRERELEASE_AND_BUILD_CHARS = [
   'y',
   'z'
 ];
+
+export const VALID_SPECIFIER_PREFIX_OPERATOR_CHARS = [
+  '<',
+  '=',
+  '>',
+  '^',
+  '~'
+];
+
+export const VALID_SPECIFIER_VERSION_CORE_CHARS = [
+  '*',
+  '.',
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  'X',
+  'x'
+];
+
+const NONBREAKING_SPACE_CHAR = String.fromCharCode(160);
+
+const SPACE_CHAR = String.fromCharCode(32);
+
+const TAB_CHAR = String.fromCharCode(9);
+
+export const WHITESPACE_CHARS = [
+  TAB_CHAR,
+  SPACE_CHAR,
+  NONBREAKING_SPACE_CHAR
+];
