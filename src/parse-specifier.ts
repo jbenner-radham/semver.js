@@ -1,7 +1,7 @@
 import {
   PREFERRED_X_RANGE_CHAR,
   VALID_PRERELEASE_AND_BUILD_CHARS, VALID_SPECIFIER_COMPARATOR_CHARS, VALID_SPECIFIER_COMPARATORS,
-  VALID_SPECIFIER_VERSION_DIGIT_AND_X_CHARS, VALID_X_RANGE_CHARS
+  VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS, VALID_X_RANGE_CHARS
 } from './constants';
 import { isHyphenatedRangeSpecifier } from './does';
 import isIntLike from './is-int-like';
@@ -145,7 +145,7 @@ function parseHyphenatedRangeSpecifier(specifier: string): VersionSpecifierRange
   let state: State = 'initialization';
 
   chars.forEach(char => {
-    const isVersionNumberOrXChar = VALID_SPECIFIER_VERSION_DIGIT_AND_X_CHARS.includes(char);
+    const isVersionNumberOrXChar = VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char);
 
     if (state === 'initialization') {
       if (!isVersionNumberOrXChar) {
@@ -222,7 +222,7 @@ function parseHyphenatedRangeSpecifier(specifier: string): VersionSpecifierRange
           );
       }
     } else if (versionCoreStates.includes(state)) {
-      if (!VALID_SPECIFIER_VERSION_DIGIT_AND_X_CHARS.includes(char)) {
+      if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         switch (state) {
           case 'is-in-major':
             throw new TypeError(`The "${char}" character is invalid for major versions`);
@@ -321,7 +321,7 @@ function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
     if (state === 'initialization') {
       if (VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
         state = 'is-in-comparator';
-      } else if (VALID_SPECIFIER_VERSION_DIGIT_AND_X_CHARS.includes(char)) {
+      } else if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         state = 'is-in-major';
       } else if (char === ' ') {
         doNotBufferChar = true;
@@ -381,7 +381,7 @@ function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
           );
       }
     } else if (versionCoreStates.includes(state)) {
-      if (!VALID_SPECIFIER_VERSION_DIGIT_AND_X_CHARS.includes(char)) {
+      if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         switch (state) {
           case 'is-in-major':
             throw new TypeError(`The "${char}" character is invalid for major versions`);
