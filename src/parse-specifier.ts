@@ -7,21 +7,21 @@ import isIntLike from './is-int-like';
 
 type VersionSpecifierComparator = '<' | '<=' | '=' | '>' | '>=' | '^' | '~';
 
-type VersionSpecifierVersionCoreComponent = number | 'x';
+type VersionSpecifierVersionCoreNumberOrX = number | 'x';
 
 type VersionSpecifier = {
-  comparator: VersionSpecifierComparator;
-  major: VersionSpecifierVersionCoreComponent;
-  minor: VersionSpecifierVersionCoreComponent;
-  patch: VersionSpecifierVersionCoreComponent;
+  comparator: VersionSpecifierComparator | '';
+  major: VersionSpecifierVersionCoreNumberOrX;
+  minor: VersionSpecifierVersionCoreNumberOrX;
+  patch: VersionSpecifierVersionCoreNumberOrX;
   prerelease: string;
   build: string;
 };
 
 type VersionSpecifierSansComparator = {
-  major: VersionSpecifierVersionCoreComponent;
-  minor: VersionSpecifierVersionCoreComponent;
-  patch: VersionSpecifierVersionCoreComponent;
+  major: VersionSpecifierVersionCoreNumberOrX;
+  minor: VersionSpecifierVersionCoreNumberOrX;
+  patch: VersionSpecifierVersionCoreNumberOrX;
   prerelease: string;
   build: string;
 };
@@ -31,9 +31,9 @@ type HyphenatedRangeVersionSpecifier = {
   upper: VersionSpecifierSansComparator;
 };
 
-function normalizeSpecifierVersionCoreComponent(
+function normalizeSpecifierVersionCoreNumberOrX(
   component: string
-): VersionSpecifierVersionCoreComponent {
+): VersionSpecifierVersionCoreNumberOrX {
   if (isIntLike(component)) {
     return Number.parseInt(component);
   }
@@ -42,7 +42,7 @@ function normalizeSpecifierVersionCoreComponent(
     return 'x';
   }
 
-  throw new TypeError(`The component "${component}" is not a valid version core specifier`);
+  throw new TypeError(`The version core component "${component}" is not a number or x value`);
 }
 
 function parseHyphenatedRangeSpecifier(specifier: string): HyphenatedRangeVersionSpecifier {
@@ -208,16 +208,16 @@ function parseHyphenatedRangeSpecifier(specifier: string): HyphenatedRangeVersio
 
   return {
     lower: {
-      major: normalizeSpecifierVersionCoreComponent(buffer.lower.major),
-      minor: normalizeSpecifierVersionCoreComponent(buffer.lower.minor),
-      patch: normalizeSpecifierVersionCoreComponent(buffer.lower.patch),
+      major: normalizeSpecifierVersionCoreNumberOrX(buffer.lower.major),
+      minor: normalizeSpecifierVersionCoreNumberOrX(buffer.lower.minor),
+      patch: normalizeSpecifierVersionCoreNumberOrX(buffer.lower.patch),
       prerelease: buffer.lower.prerelease,
       build: buffer.lower.build
     },
     upper: {
-      major: normalizeSpecifierVersionCoreComponent(buffer.upper.major),
-      minor: normalizeSpecifierVersionCoreComponent(buffer.upper.minor),
-      patch: normalizeSpecifierVersionCoreComponent(buffer.upper.patch),
+      major: normalizeSpecifierVersionCoreNumberOrX(buffer.upper.major),
+      minor: normalizeSpecifierVersionCoreNumberOrX(buffer.upper.minor),
+      patch: normalizeSpecifierVersionCoreNumberOrX(buffer.upper.patch),
       prerelease: buffer.upper.prerelease,
       build: buffer.upper.build
     }
@@ -366,9 +366,9 @@ function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
 
   return {
     comparator: buffer.comparator as VersionSpecifierComparator,
-    major: normalizeSpecifierVersionCoreComponent(buffer.major),
-    minor: normalizeSpecifierVersionCoreComponent(buffer.minor),
-    patch: normalizeSpecifierVersionCoreComponent(buffer.patch),
+    major: normalizeSpecifierVersionCoreNumberOrX(buffer.major),
+    minor: normalizeSpecifierVersionCoreNumberOrX(buffer.minor),
+    patch: normalizeSpecifierVersionCoreNumberOrX(buffer.patch),
     prerelease: buffer.prerelease,
     build: buffer.build
   };
