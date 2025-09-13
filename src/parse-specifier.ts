@@ -7,33 +7,25 @@ import isIntLike from './is-int-like';
 
 type VersionSpecifierComparator = '<' | '<=' | '=' | '>' | '>=' | '^' | '~';
 
-type VersionSpecifierVersionCoreNumberOrX = number | 'x';
+type VersionSpecifierNumberOrX = number | 'x';
 
 type VersionSpecifier = {
   comparator: VersionSpecifierComparator | '';
-  major: VersionSpecifierVersionCoreNumberOrX;
-  minor: VersionSpecifierVersionCoreNumberOrX;
-  patch: VersionSpecifierVersionCoreNumberOrX;
-  prerelease: string;
-  build: string;
-};
-
-type VersionSpecifierSansComparator = {
-  major: VersionSpecifierVersionCoreNumberOrX;
-  minor: VersionSpecifierVersionCoreNumberOrX;
-  patch: VersionSpecifierVersionCoreNumberOrX;
+  major: VersionSpecifierNumberOrX;
+  minor: VersionSpecifierNumberOrX;
+  patch: VersionSpecifierNumberOrX;
   prerelease: string;
   build: string;
 };
 
 type HyphenatedRangeVersionSpecifier = {
-  lower: VersionSpecifierSansComparator;
-  upper: VersionSpecifierSansComparator;
+  lower: VersionSpecifier;
+  upper: VersionSpecifier;
 };
 
-function normalizeSpecifierVersionCoreNumberOrX(
+function normalizeSpecifierNumberOrX(
   component: string
-): VersionSpecifierVersionCoreNumberOrX {
+): VersionSpecifierNumberOrX {
   if (isIntLike(component)) {
     return Number.parseInt(component);
   }
@@ -212,16 +204,18 @@ function parseHyphenatedRangeSpecifier(specifier: string): HyphenatedRangeVersio
 
   return {
     lower: {
-      major: normalizeSpecifierVersionCoreNumberOrX(buffer.lower.major),
-      minor: normalizeSpecifierVersionCoreNumberOrX(buffer.lower.minor),
-      patch: normalizeSpecifierVersionCoreNumberOrX(buffer.lower.patch),
+      comparator: '',
+      major: normalizeSpecifierNumberOrX(buffer.lower.major),
+      minor: normalizeSpecifierNumberOrX(buffer.lower.minor),
+      patch: normalizeSpecifierNumberOrX(buffer.lower.patch),
       prerelease: buffer.lower.prerelease,
       build: buffer.lower.build
     },
     upper: {
-      major: normalizeSpecifierVersionCoreNumberOrX(buffer.upper.major),
-      minor: normalizeSpecifierVersionCoreNumberOrX(buffer.upper.minor),
-      patch: normalizeSpecifierVersionCoreNumberOrX(buffer.upper.patch),
+      comparator: '',
+      major: normalizeSpecifierNumberOrX(buffer.upper.major),
+      minor: normalizeSpecifierNumberOrX(buffer.upper.minor),
+      patch: normalizeSpecifierNumberOrX(buffer.upper.patch),
       prerelease: buffer.upper.prerelease,
       build: buffer.upper.build
     }
@@ -370,9 +364,9 @@ function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
 
   return {
     comparator: buffer.comparator as VersionSpecifierComparator,
-    major: normalizeSpecifierVersionCoreNumberOrX(buffer.major),
-    minor: normalizeSpecifierVersionCoreNumberOrX(buffer.minor),
-    patch: normalizeSpecifierVersionCoreNumberOrX(buffer.patch),
+    major: normalizeSpecifierNumberOrX(buffer.major),
+    minor: normalizeSpecifierNumberOrX(buffer.minor),
+    patch: normalizeSpecifierNumberOrX(buffer.patch),
     prerelease: buffer.prerelease,
     build: buffer.build
   };
