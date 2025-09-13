@@ -14,7 +14,7 @@ describe('getCompositeSpecifiers', () => {
     expect(getCompositeSpecifiers('>1.0.0 <=5.0.0')).toEqual(['>1.0.0', '<=5.0.0']);
   });
 
-  it('returns two specifiers for spaced greater than and less than or equal to range', () => {
+  it('collapses whitespace on a greater than and less than or equal to range', () => {
     expect(getCompositeSpecifiers('> 1.0.0 <= 5.0.0')).toEqual(['>1.0.0', '<=5.0.0']);
   });
 
