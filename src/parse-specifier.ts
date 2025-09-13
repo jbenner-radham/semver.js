@@ -206,6 +206,10 @@ function parseHyphenatedRangeSpecifier(specifier: string): HyphenatedRangeVersio
     throw new TypeError('An upper bound for a hyphenated range specifier could not be found');
   }
 
+  if (!buffer.lower.major) {
+    throw new TypeError('A lower bound for a hyphenated range specifier could not be found');
+  }
+
   return {
     lower: {
       major: normalizeSpecifierVersionCoreNumberOrX(buffer.lower.major),
