@@ -24,17 +24,17 @@ type HyphenatedRangeVersionSpecifier = {
 };
 
 function normalizeSpecifierNumberOrX(
-  component: string
+  value: string
 ): VersionSpecifierNumberOrX {
-  if (isIntLike(component)) {
-    return Number.parseInt(component);
+  if (isIntLike(value)) {
+    return Number.parseInt(value);
   }
 
-  if (VALID_X_RANGE_CHARS.includes(component)) {
+  if (VALID_X_RANGE_CHARS.includes(value)) {
     return 'x';
   }
 
-  throw new TypeError(`The version core component "${component}" is not a number or x value`);
+  throw new TypeError(`The version core value "${value}" is not a number or x value`);
 }
 
 function parseHyphenatedRangeSpecifier(specifier: string): HyphenatedRangeVersionSpecifier {
