@@ -9,35 +9,107 @@ type VersionSpecifierComparator = '<' | '<=' | '=' | '>' | '>=' | '^' | '~';
 
 type VersionSpecifierNumberOrX = number | 'x';
 
-type VersionSpecifier = {
-  comparator: VersionSpecifierComparator | '';
-  major: VersionSpecifierNumberOrX;
-  minor: VersionSpecifierNumberOrX;
-  patch: VersionSpecifierNumberOrX;
-  prerelease: string;
-  build: string;
-};
+export class VersionSpecifier {
+  #comparator: VersionSpecifierComparator | '';
 
-type HyphenatedRangeVersionSpecifier = {
-  lower: VersionSpecifier;
-  upper: VersionSpecifier;
-};
+  #major: VersionSpecifierNumberOrX;
 
-function normalizeSpecifierNumberOrX(
-  value: string
-): VersionSpecifierNumberOrX {
-  if (isIntLike(value)) {
-    return Number.parseInt(value);
+  #minor: VersionSpecifierNumberOrX;
+
+  #patch: VersionSpecifierNumberOrX;
+
+  #prerelease: string;
+
+  #build: string;
+
+  get comparator(): VersionSpecifierComparator | '' {
+    return this.#comparator;
   }
 
-  if (VALID_X_RANGE_CHARS.includes(value)) {
-    return 'x';
+  get major(): VersionSpecifierNumberOrX {
+    return this.#major;
   }
 
-  throw new TypeError(`The version core value "${value}" is not a number or x value`);
+  get minor(): VersionSpecifierNumberOrX {
+    return this.#minor;
+  }
+
+  get patch(): VersionSpecifierNumberOrX {
+    return this.#patch;
+  }
+
+  get prerelease(): string {
+    return this.#prerelease;
+  }
+
+  get build(): string {
+    return this.#build;
+  }
+
+  #ensureValidComparator(value: string): void {
+    if (value.length && !VALID_SPECIFIER_COMPARATORS.includes(value)) {
+      throw new TypeError(`The comparator "${value}" is invalid`);
+    }
+  }
+
+  #normalizeNumberOrX(value: number | string): VersionSpecifierNumberOrX {
+    if (isIntLike(value)) {
+      return Number.parseInt(value as string);
+    }
+
+    if (VALID_X_RANGE_CHARS.includes(value as string) || value === '') {
+      return 'x';
+    }
+
+    throw new TypeError(`The version core value "${value}" is not a number or x value`);
+  }
+
+  constructor({
+    comparator = '',
+    major,
+    minor = '',
+    patch = '',
+    prerelease = '',
+    build = ''
+  }: {
+    comparator?: string;
+    major: number | string;
+    minor?: number | string;
+    patch?: number | string;
+    prerelease?: string;
+    build?: string;
+  }) {
+    this.#ensureValidComparator(comparator);
+
+    this.#comparator = comparator as VersionSpecifierComparator | '';
+    this.#major = this.#normalizeNumberOrX(major);
+    this.#minor = this.#normalizeNumberOrX(minor);
+    this.#patch = this.#normalizeNumberOrX(patch);
+    this.#prerelease = prerelease;
+    this.#build = build;
+  }
 }
 
-function parseHyphenatedRangeSpecifier(specifier: string): HyphenatedRangeVersionSpecifier {
+export class VersionSpecifierRange {
+  #lower: VersionSpecifier;
+
+  #upper: VersionSpecifier;
+
+  get lower(): VersionSpecifier {
+    return this.#lower;
+  }
+
+  get upper(): VersionSpecifier {
+    return this.#upper;
+  }
+
+  constructor({ lower, upper }: { lower: VersionSpecifier; upper: VersionSpecifier }) {
+    this.#lower = lower;
+    this.#upper = upper;
+  }
+}
+
+function parseHyphenatedRangeSpecifier(specifier: string): VersionSpecifierRange {
   type State = 'initialization'
     | 'is-in-major'
     | 'is-in-minor'
@@ -202,24 +274,22 @@ function parseHyphenatedRangeSpecifier(specifier: string): HyphenatedRangeVersio
     throw new TypeError('A lower bound for a hyphenated range specifier could not be found');
   }
 
-  return {
-    lower: {
-      comparator: '',
-      major: normalizeSpecifierNumberOrX(buffer.lower.major),
-      minor: normalizeSpecifierNumberOrX(buffer.lower.minor),
-      patch: normalizeSpecifierNumberOrX(buffer.lower.patch),
+  return new VersionSpecifierRange({
+    lower: new VersionSpecifier({
+      major: buffer.lower.major,
+      minor: buffer.lower.minor,
+      patch: buffer.lower.patch,
       prerelease: buffer.lower.prerelease,
       build: buffer.lower.build
-    },
-    upper: {
-      comparator: '',
-      major: normalizeSpecifierNumberOrX(buffer.upper.major),
-      minor: normalizeSpecifierNumberOrX(buffer.upper.minor),
-      patch: normalizeSpecifierNumberOrX(buffer.upper.patch),
+    }),
+    upper: new VersionSpecifier({
+      major: buffer.upper.major,
+      minor: buffer.upper.minor,
+      patch: buffer.upper.patch,
       prerelease: buffer.upper.prerelease,
       build: buffer.upper.build
-    }
-  };
+    })
+  });
 }
 
 function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
@@ -358,22 +428,18 @@ function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
     }
   });
 
-  if (buffer.comparator.length && !VALID_SPECIFIER_COMPARATORS.includes(buffer.comparator)) {
-    throw new TypeError(`The comparator "${buffer.comparator}" is invalid`);
-  }
-
-  return {
-    comparator: buffer.comparator as VersionSpecifierComparator,
-    major: normalizeSpecifierNumberOrX(buffer.major),
-    minor: normalizeSpecifierNumberOrX(buffer.minor),
-    patch: normalizeSpecifierNumberOrX(buffer.patch),
+  return new VersionSpecifier({
+    comparator: buffer.comparator,
+    major: buffer.major,
+    minor: buffer.minor,
+    patch: buffer.patch,
     prerelease: buffer.prerelease,
     build: buffer.build
-  };
+  });
 }
 
-export default function parseSpecifier(specifier: string) {
-  return isHyphenatedRangeSpecifier(specifier)
-    ? parseHyphenatedRangeSpecifier(specifier)
-    : parseNonHyphenatedRangeSpecifier(specifier);
+export default function parseSpecifier(value: string): VersionSpecifier | VersionSpecifierRange {
+  return isHyphenatedRangeSpecifier(value)
+    ? parseHyphenatedRangeSpecifier(value)
+    : parseNonHyphenatedRangeSpecifier(value);
 }
