@@ -1,4 +1,5 @@
 import {
+  PREFERRED_X_RANGE_CHAR,
   VALID_PRERELEASE_AND_BUILD_CHARS, VALID_SPECIFIER_COMPARATOR_CHARS, VALID_SPECIFIER_COMPARATORS,
   VALID_SPECIFIER_VERSION_DIGIT_AND_X_CHARS, VALID_X_RANGE_CHARS
 } from './constants';
@@ -7,7 +8,7 @@ import isIntLike from './is-int-like';
 
 type VersionSpecifierComparator = '<' | '<=' | '=' | '>' | '>=' | '^' | '~';
 
-type VersionSpecifierNumberOrX = number | 'x';
+type VersionSpecifierNumberOrX = number | typeof PREFERRED_X_RANGE_CHAR;
 
 export class VersionSpecifier {
   #comparator: VersionSpecifierComparator | '';
@@ -58,7 +59,7 @@ export class VersionSpecifier {
     }
 
     if (VALID_X_RANGE_CHARS.includes(value as string) || value === '') {
-      return 'x';
+      return PREFERRED_X_RANGE_CHAR;
     }
 
     throw new TypeError(`The version core value "${value}" is not a number or x value`);

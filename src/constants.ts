@@ -67,6 +67,8 @@ export const ASCII_SORT_ORDER = [
   'z'
 ];
 
+export const PREFERRED_X_RANGE_CHAR = 'x';
+
 /**
  * The implemented SemVer specification version.
  */
