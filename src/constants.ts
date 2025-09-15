@@ -67,6 +67,8 @@ export const ASCII_SORT_ORDER = [
   'z'
 ];
 
+export const LOGICAL_OR_OPERATOR = '||';
+
 export const PREFERRED_X_RANGE_CHAR = 'x';
 
 /**

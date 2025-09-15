@@ -4,6 +4,7 @@ import {
   VALID_SPECIFIER_VERSION_CORE_CHARS
 } from './constants';
 import is from './is';
+import { normalizeSpecifier } from './satisfaction/util';
 import stripSpecifierPrefixOperator from './strip-specifier-prefix-operator';
 
 function isAnySpecifier(specifier: string): boolean {
@@ -61,37 +62,6 @@ function isAnySpecifier(specifier: string): boolean {
 //
 //   return count > 1;
 // }
-
-export function normalizeSpecifier(specifier: string): string {
-  const chars = [...specifier.trim()];
-  let buffer = '';
-  let shouldUnconditionallyBuffer = false;
-
-  // Strip whitespace between a comparator and the rest of the version specifier.
-  chars.forEach(char => {
-    if (shouldUnconditionallyBuffer) {
-      buffer += char;
-
-      return;
-    }
-
-    if (char === ' ' && VALID_SPECIFIER_COMPARATORS.includes(buffer.trim())) {
-      return;
-    }
-
-    if (VALID_SPECIFIER_VERSION_CORE_CHARS.includes(char)) {
-      shouldUnconditionallyBuffer = true;
-    }
-
-    buffer += char;
-  });
-
-  // Normalize hyphenated ranges to only include a single space of padding.
-  return buffer
-    .split(' ')
-    .filter(component => component !== '')
-    .join(' ');
-}
 
 export function getCompositeSpecifiers(specifier: string): string[] {
   type State = 'initialization'
@@ -187,10 +157,6 @@ export function isHyphenatedRangeSpecifier(specifier: string): boolean {
   const hyphen = ' - ';
 
   return !specifier.startsWith(hyphen) && !specifier.endsWith(hyphen) && specifier.includes(hyphen);
-}
-
-function isLogicalOrSpecifier(specifier: string): boolean {
-  return specifier.includes('||');
 }
 
 function getLogicalOrSpecifiers(specifier: string): string[] {

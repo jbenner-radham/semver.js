@@ -2,7 +2,7 @@ import isPrerelease from './is-prerelease.js';
 import parse from './parse.js';
 
 class Comparator {
-  #version = '';
+  readonly #version: string;
 
   constructor(version: string) {
     this.#version = version;

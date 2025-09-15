@@ -1,116 +1,21 @@
 import {
-  PREFERRED_X_RANGE_CHAR,
-  VALID_PRERELEASE_AND_BUILD_CHARS, VALID_SPECIFIER_COMPARATOR_CHARS, VALID_SPECIFIER_COMPARATORS,
-  VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS, VALID_X_RANGE_CHARS
+  VALID_PRERELEASE_AND_BUILD_CHARS,
+  VALID_SPECIFIER_COMPARATOR_CHARS,
+  VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS
 } from './constants';
 import { isHyphenatedRangeSpecifier } from './does';
-import isIntLike from './is-int-like';
+import ensureValidComparator from './satisfaction/ensure-valid-comparator';
+import {
+  getLogicalAndSpecifiers,
+  getLogicalOrSpecifiers,
+  isLogicalOrSpecifier
+} from './satisfaction/util';
+import VersionClause from './satisfaction/version-clause';
+import VersionRange from './satisfaction/version-range';
+import type { VersionComparator } from './types';
+import { isEmptyString, trim } from './util';
 
-type VersionSpecifierComparator = '<' | '<=' | '=' | '>' | '>=' | '^' | '~';
-
-type VersionSpecifierNumberOrX = number | typeof PREFERRED_X_RANGE_CHAR;
-
-export class VersionSpecifier {
-  #comparator: VersionSpecifierComparator | '';
-
-  #major: VersionSpecifierNumberOrX;
-
-  #minor: VersionSpecifierNumberOrX;
-
-  #patch: VersionSpecifierNumberOrX;
-
-  #prerelease: string;
-
-  #build: string;
-
-  get comparator(): VersionSpecifierComparator | '' {
-    return this.#comparator;
-  }
-
-  get major(): VersionSpecifierNumberOrX {
-    return this.#major;
-  }
-
-  get minor(): VersionSpecifierNumberOrX {
-    return this.#minor;
-  }
-
-  get patch(): VersionSpecifierNumberOrX {
-    return this.#patch;
-  }
-
-  get prerelease(): string {
-    return this.#prerelease;
-  }
-
-  get build(): string {
-    return this.#build;
-  }
-
-  #ensureValidComparator(value: string): void {
-    if (value.length && !VALID_SPECIFIER_COMPARATORS.includes(value)) {
-      throw new TypeError(`The comparator "${value}" is invalid`);
-    }
-  }
-
-  #normalizeNumberOrX(value: number | string): VersionSpecifierNumberOrX {
-    if (isIntLike(value)) {
-      return Number.parseInt(value as string);
-    }
-
-    if (VALID_X_RANGE_CHARS.includes(value as string) || value === '') {
-      return PREFERRED_X_RANGE_CHAR;
-    }
-
-    throw new TypeError(`The version core value "${value}" is not a number or x value`);
-  }
-
-  constructor({
-    comparator = '',
-    major,
-    minor = '',
-    patch = '',
-    prerelease = '',
-    build = ''
-  }: {
-    comparator?: string;
-    major: number | string;
-    minor?: number | string;
-    patch?: number | string;
-    prerelease?: string;
-    build?: string;
-  }) {
-    this.#ensureValidComparator(comparator);
-
-    this.#comparator = comparator as VersionSpecifierComparator | '';
-    this.#major = this.#normalizeNumberOrX(major);
-    this.#minor = this.#normalizeNumberOrX(minor);
-    this.#patch = this.#normalizeNumberOrX(patch);
-    this.#prerelease = prerelease;
-    this.#build = build;
-  }
-}
-
-export class VersionSpecifierRange {
-  #lower: VersionSpecifier;
-
-  #upper: VersionSpecifier;
-
-  get lower(): VersionSpecifier {
-    return this.#lower;
-  }
-
-  get upper(): VersionSpecifier {
-    return this.#upper;
-  }
-
-  constructor({ lower, upper }: { lower: VersionSpecifier; upper: VersionSpecifier }) {
-    this.#lower = lower;
-    this.#upper = upper;
-  }
-}
-
-function parseHyphenatedRangeSpecifier(specifier: string): VersionSpecifierRange {
+function parseHyphenatedRange(value: string): VersionRange {
   type State = 'initialization'
     | 'is-in-major'
     | 'is-in-minor'
@@ -137,7 +42,7 @@ function parseHyphenatedRangeSpecifier(specifier: string): VersionSpecifierRange
       build: ''
     }
   };
-  const chars = [...specifier.trim()];
+  const chars = [...value.trim()];
   const prereleaseAndBuildStates: State[] = ['is-in-prerelease', 'is-in-build'];
   const versionCoreStates: State[] = ['is-in-major', 'is-in-minor', 'is-in-patch'];
   let doNotBufferChar = false;
@@ -166,7 +71,7 @@ function parseHyphenatedRangeSpecifier(specifier: string): VersionSpecifierRange
             isInBound = 'upper';
             state = 'initialization';
           } else {
-            throw new TypeError(`The "${specifier}" hyphenated range specifier is invalid`);
+            throw new TypeError(`The "${value}" hyphenated range specifier is invalid`);
           }
           break;
         case 'is-in-space':
@@ -275,25 +180,13 @@ function parseHyphenatedRangeSpecifier(specifier: string): VersionSpecifierRange
     throw new TypeError('A lower bound for a hyphenated range specifier could not be found');
   }
 
-  return new VersionSpecifierRange({
-    lower: new VersionSpecifier({
-      major: buffer.lower.major,
-      minor: buffer.lower.minor,
-      patch: buffer.lower.patch,
-      prerelease: buffer.lower.prerelease,
-      build: buffer.lower.build
-    }),
-    upper: new VersionSpecifier({
-      major: buffer.upper.major,
-      minor: buffer.upper.minor,
-      patch: buffer.upper.patch,
-      prerelease: buffer.upper.prerelease,
-      build: buffer.upper.build
-    })
+  return new VersionRange({
+    lower: new VersionClause({ ...buffer.lower }),
+    upper: new VersionClause({ ...buffer.upper })
   });
 }
 
-function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
+function parseVersionClause(specifier: string): VersionClause {
   type State = 'initialization'
     | 'is-in-comparator'
     | 'is-in-major'
@@ -429,8 +322,10 @@ function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
     }
   });
 
-  return new VersionSpecifier({
-    comparator: buffer.comparator,
+  ensureValidComparator(buffer.comparator);
+
+  return new VersionClause({
+    comparator: buffer.comparator as VersionComparator,
     major: buffer.major,
     minor: buffer.minor,
     patch: buffer.patch,
@@ -439,8 +334,19 @@ function parseNonHyphenatedRangeSpecifier(specifier: string): VersionSpecifier {
   });
 }
 
-export default function parseSpecifier(value: string): VersionSpecifier | VersionSpecifierRange {
-  return isHyphenatedRangeSpecifier(value)
-    ? parseHyphenatedRangeSpecifier(value)
-    : parseNonHyphenatedRangeSpecifier(value);
+export default function parseSpecifier(value: string) {
+  if (isLogicalOrSpecifier(value)) {
+    const logicalOrSpecifiers = getLogicalOrSpecifiers(value);
+    const isInvalidLogicalOr = logicalOrSpecifiers.map(trim).some(isEmptyString);
+
+    if (isInvalidLogicalOr) {
+      throw new TypeError(`The specifier "${value}" has one or more invalid logical or operators`);
+    }
+
+    return logicalOrSpecifiers.map(logicalOrSpecifier =>
+      getLogicalAndSpecifiers(logicalOrSpecifier).map(parseVersionClause)
+    );
+  }
+
+  return [getLogicalAndSpecifiers(value).map(parseVersionClause)];
 }
