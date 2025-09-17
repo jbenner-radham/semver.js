@@ -1,4 +1,4 @@
-import { PREFERRED_X_RANGE_CHAR, VALID_X_RANGE_CHARS } from '../constants';
+import { NORMALIZED_X_RANGE_CHAR, VALID_X_RANGE_CHARS } from '../constants';
 import isIntLike from '../is-int-like';
 import type { VersionComparator, VersionNumberOrXRange } from '../types';
 import ensureValidComparator from './ensure-valid-comparator';
@@ -50,7 +50,7 @@ export default class VersionClause {
     }
 
     if (VALID_X_RANGE_CHARS.includes(value as string) || value === '') {
-      return PREFERRED_X_RANGE_CHAR;
+      return NORMALIZED_X_RANGE_CHAR;
     }
 
     throw new TypeError(`The version core value "${value}" is not a number or x range`);

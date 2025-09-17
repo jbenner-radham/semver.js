@@ -3,7 +3,7 @@ import {
   VALID_SPECIFIER_COMPARATOR_CHARS,
   VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS
 } from './constants';
-import { isHyphenatedRangeSpecifier } from './does';
+import { isHyphenatedRange } from './does';
 import ensureValidComparator from './satisfaction/ensure-valid-comparator';
 import {
   getLogicalAndSpecifiers,
@@ -12,6 +12,7 @@ import {
 } from './satisfaction/util';
 import VersionClause from './satisfaction/version-clause';
 import VersionRange from './satisfaction/version-range';
+import VersionSpecifier from './satisfaction/version-specifier';
 import type { VersionComparator } from './types';
 import { isEmptyString, trim } from './util';
 
@@ -334,7 +335,22 @@ function parseVersionClause(specifier: string): VersionClause {
   });
 }
 
-export default function parseSpecifier(value: string) {
+/**
+ * Parses a version specifier.
+ *
+ * Returns a multidimensional array. Each column in a row represents logical and expressions.
+ * And each row represents logical or expressions. If there is only one row, no logical or
+ * expressions are present.
+ */
+export default function parseSpecifier(value: string): VersionSpecifier[][] {
+  const parseIntoVersionSpecifier = (value: string): VersionSpecifier => {
+    return new VersionSpecifier(
+      isHyphenatedRange(value)
+        ? parseHyphenatedRange(value)
+        : parseVersionClause(value)
+    );
+  };
+
   if (isLogicalOrSpecifier(value)) {
     const logicalOrSpecifiers = getLogicalOrSpecifiers(value);
     const isInvalidLogicalOr = logicalOrSpecifiers.map(trim).some(isEmptyString);
@@ -344,9 +360,9 @@ export default function parseSpecifier(value: string) {
     }
 
     return logicalOrSpecifiers.map(logicalOrSpecifier =>
-      getLogicalAndSpecifiers(logicalOrSpecifier).map(parseVersionClause)
+      getLogicalAndSpecifiers(logicalOrSpecifier).map(parseIntoVersionSpecifier)
     );
   }
 
-  return [getLogicalAndSpecifiers(value).map(parseVersionClause)];
+  return [getLogicalAndSpecifiers(value).map(parseIntoVersionSpecifier)];
 }

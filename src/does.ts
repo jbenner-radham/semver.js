@@ -1,4 +1,5 @@
 import {
+  HYPHENATED_RANGE_OPERATOR,
   VALID_SPECIFIER_COMPARATOR_CHARS,
   VALID_SPECIFIER_COMPARATORS,
   VALID_SPECIFIER_VERSION_CORE_CHARS
@@ -153,10 +154,8 @@ function isEqualSpecifier(specifier: string): boolean {
   return specifier.startsWith('=') && is(specifier.replace('=', '')).valid();
 }
 
-export function isHyphenatedRangeSpecifier(specifier: string): boolean {
-  const hyphen = ' - ';
-
-  return !specifier.startsWith(hyphen) && !specifier.endsWith(hyphen) && specifier.includes(hyphen);
+export function isHyphenatedRange(value: string): boolean {
+  return value.includes(HYPHENATED_RANGE_OPERATOR);
 }
 
 function getLogicalOrSpecifiers(specifier: string): string[] {
