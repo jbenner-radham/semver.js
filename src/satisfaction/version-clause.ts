@@ -80,4 +80,26 @@ export default class VersionClause {
     this.#prerelease = prerelease;
     this.#build = build;
   }
+
+  toString(): string {
+    return JSON.stringify(this.valueOf(), null, 2);
+  }
+
+  valueOf(): {
+    comparator: VersionComparator;
+    major: VersionNumberOrXRange;
+    minor: VersionNumberOrXRange;
+    patch: VersionNumberOrXRange;
+    prerelease: string;
+    build: string;
+  } {
+    return {
+      comparator: this.#comparator,
+      major: this.#major,
+      minor: this.#minor,
+      patch: this.#patch,
+      prerelease: this.#prerelease,
+      build: this.#build
+    };
+  }
 }

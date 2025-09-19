@@ -33,6 +33,12 @@ class PrereleaseComparator {
   }
 
   greaterThan(version = '') {
+    if (this.#version.length === 0 && version.length > 0) {
+      return true;
+    } else if (this.#version.length > 0 && version.length === 0) {
+      return false;
+    }
+
     const subject = parsePrerelease(this.#version);
     const comparison = parsePrerelease(version);
     const longestIdentifierLength = getLongestLength(subject, comparison);
@@ -111,11 +117,12 @@ class PrereleaseComparator {
   }
 
   lessThan(version = '') {
-    if (this.equalTo(version)) {
-      return false;
-    }
-
-    return !this.greaterThan(version);
+    // if (this.equalTo(version)) {
+    //   return false;
+    // }
+    //
+    // return !this.greaterThan(version);
+    return !this.equalTo(version) && !this.greaterThan(version);
   }
 
   lessThanOrEqualTo(version = '') {

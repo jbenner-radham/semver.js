@@ -1,12 +1,7 @@
-import {
-  HYPHENATED_RANGE_OPERATOR,
-  VALID_SPECIFIER_COMPARATOR_CHARS,
-  VALID_SPECIFIER_COMPARATORS,
-  VALID_SPECIFIER_VERSION_CORE_CHARS
-} from './constants';
+import { VALID_SPECIFIER_COMPARATOR_CHARS, VALID_SPECIFIER_VERSION_CORE_CHARS } from './constants';
 import is from './is';
 import { normalizeSpecifier } from './satisfaction/util';
-import stripSpecifierPrefixOperator from './strip-specifier-prefix-operator';
+import Satisfier from './satisfaction/satisfier';
 
 function isAnySpecifier(specifier: string): boolean {
   return specifier === '*' || specifier === '';
@@ -154,30 +149,30 @@ function isEqualSpecifier(specifier: string): boolean {
   return specifier.startsWith('=') && is(specifier.replace('=', '')).valid();
 }
 
-export function isHyphenatedRange(value: string): boolean {
-  return value.includes(HYPHENATED_RANGE_OPERATOR);
-}
-
 function getLogicalOrSpecifiers(specifier: string): string[] {
   return specifier.split('||').map(specifier => specifier.trim());
 }
 
-class Satisfier {
-  #version: string;
+// class Satisfier {
+//   #version: string;
+//
+//   constructor(version: string) {
+//     this.#version = version;
+//   }
+//
+//   satisfy(specifier: string) {
+//     if (isAnySpecifier(specifier)) {
+//       return true;
+//     }
+//
+//     if (isEqualSpecifier(specifier)) {
+//       const specifiedVersion = stripSpecifierPrefixOperator(specifier);
+//
+//       return is(this.#version).equalTo(specifiedVersion);
+//     }
+//   }
+// }
 
-  constructor(version: string) {
-    this.#version = version;
-  }
-
-  satisfy(specifier: string) {
-    if (isAnySpecifier(specifier)) {
-      return true;
-    }
-
-    if (isEqualSpecifier(specifier)) {
-      const specifiedVersion = stripSpecifierPrefixOperator(specifier);
-
-      return is(this.#version).equalTo(specifiedVersion);
-    }
-  }
+export default function does(version: string): Satisfier {
+  return new Satisfier(version);
 }

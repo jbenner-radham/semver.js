@@ -1,7 +1,9 @@
 import {
+  HYPHENATED_RANGE_OPERATOR,
   LOGICAL_OR_OPERATOR,
   VALID_PRERELEASE_AND_BUILD_CHARS,
-  VALID_SPECIFIER_COMPARATOR_CHARS, VALID_SPECIFIER_COMPARATORS,
+  VALID_SPECIFIER_COMPARATOR_CHARS,
+  VALID_SPECIFIER_COMPARATORS,
   VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS
 } from '../constants';
 
@@ -190,6 +192,10 @@ export function getLogicalAndSpecifiers(value: string): string[] {
 
 export function getLogicalOrSpecifiers(value: string): string[] {
   return value.split(LOGICAL_OR_OPERATOR);
+}
+
+export function isHyphenatedRange(value: string): boolean {
+  return value.includes(HYPHENATED_RANGE_OPERATOR);
 }
 
 export function isLogicalOrSpecifier(value: string): boolean {

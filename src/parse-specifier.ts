@@ -3,16 +3,14 @@ import {
   VALID_SPECIFIER_COMPARATOR_CHARS,
   VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS
 } from './constants';
-import { isHyphenatedRange } from './does';
 import ensureValidComparator from './satisfaction/ensure-valid-comparator';
 import {
   getLogicalAndSpecifiers,
-  getLogicalOrSpecifiers,
+  getLogicalOrSpecifiers, isHyphenatedRange,
   isLogicalOrSpecifier
 } from './satisfaction/util';
 import VersionClause from './satisfaction/version-clause';
 import VersionRange from './satisfaction/version-range';
-import VersionSpecifier from './satisfaction/version-specifier';
 import type { VersionComparator } from './types';
 import { isEmptyString, trim } from './util';
 
@@ -208,10 +206,11 @@ function parseVersionClause(specifier: string): VersionClause {
   const chars = [...specifier.trim()];
   const prereleaseAndBuildStates: State[] = ['is-in-prerelease', 'is-in-build'];
   const versionCoreStates: State[] = ['is-in-major', 'is-in-minor', 'is-in-patch'];
-  let doNotBufferChar = false;
   let state: State = 'initialization';
 
   chars.forEach(char => {
+    let doNotBufferChar = false;
+
     if (state === 'initialization') {
       if (VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
         state = 'is-in-comparator';
@@ -219,6 +218,19 @@ function parseVersionClause(specifier: string): VersionClause {
         state = 'is-in-major';
       } else if (char === ' ') {
         doNotBufferChar = true;
+      }
+    } else if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
+      switch (state) {
+        case 'is-in-comparator':
+          state = 'is-in-major';
+          break;
+        case 'is-in-minor':
+        case 'is-in-patch':
+        case 'is-in-prerelease':
+        case 'is-in-build':
+          break;
+        default:
+          throw new TypeError(`Character "${char}" is in an invalid position`);
       }
     } else if (char === '.') {
       switch (state) {
@@ -338,17 +350,15 @@ function parseVersionClause(specifier: string): VersionClause {
 /**
  * Parses a version specifier.
  *
- * Returns a multidimensional array. Each column in a row represents logical and expressions.
- * And each row represents logical or expressions. If there is only one row, no logical or
+ * Returns a multidimensional array. Each column in a row represents logical AND expressions.
+ * And each row represents logical OR expressions. If there is only one row, no logical OR
  * expressions are present.
  */
-export default function parseSpecifier(value: string): VersionSpecifier[][] {
-  const parseIntoVersionSpecifier = (value: string): VersionSpecifier => {
-    return new VersionSpecifier(
-      isHyphenatedRange(value)
-        ? parseHyphenatedRange(value)
-        : parseVersionClause(value)
-    );
+export default function parseSpecifier(value: string): (VersionClause | VersionRange)[][] {
+  const parse = (value: string): VersionClause | VersionRange => {
+    return isHyphenatedRange(value)
+      ? parseHyphenatedRange(value)
+      : parseVersionClause(value);
   };
 
   if (isLogicalOrSpecifier(value)) {
@@ -360,9 +370,9 @@ export default function parseSpecifier(value: string): VersionSpecifier[][] {
     }
 
     return logicalOrSpecifiers.map(logicalOrSpecifier =>
-      getLogicalAndSpecifiers(logicalOrSpecifier).map(parseIntoVersionSpecifier)
+      getLogicalAndSpecifiers(logicalOrSpecifier).map(parse)
     );
   }
 
-  return [getLogicalAndSpecifiers(value).map(parseIntoVersionSpecifier)];
+  return [getLogicalAndSpecifiers(value).map(parse)];
 }
