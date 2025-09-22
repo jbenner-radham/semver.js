@@ -257,4 +257,22 @@ describe('is', () => {
       });
     });
   });
+
+  describe('#specifier.valid', () => {
+    it('is a function', () => {
+      expect(is.specifier('^1.x').valid).toBeTypeOf('function');
+    });
+
+    it('returns a boolean', () => {
+      expect(is.specifier('^1.x').valid()).toBeTypeOf('boolean');
+    });
+
+    it('returns true for ^1.x', () => {
+      expect(is.specifier('^1.x').valid()).toBe(true);
+    });
+
+    it('returns false for ~1.0.0.0', () => {
+      expect(is.specifier('~1.0.0.0').valid()).toBe(false);
+    });
+  });
 });

@@ -1,5 +1,6 @@
-import isPrerelease from './is-prerelease.js';
-import parse from './parse.js';
+import isPrerelease from './is-prerelease';
+import parse from './parse';
+import parseSpecifier from './parse-specifier';
 
 class Comparator {
   readonly #version: string;
@@ -154,6 +155,28 @@ class Comparator {
   }
 }
 
+class SpecifierValidator {
+  readonly #specifier: string;
+
+  constructor(specifier: string) {
+    this.#specifier = specifier;
+  }
+
+  valid(): boolean {
+    try {
+      parseSpecifier(this.#specifier);
+
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+}
+
 export default function is(version: string): Comparator {
   return new Comparator(version);
 }
+
+is.specifier = function (specifier: string): SpecifierValidator {
+  return new SpecifierValidator(specifier);
+};
