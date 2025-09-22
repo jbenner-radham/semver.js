@@ -8,24 +8,132 @@ describe('does', () => {
   });
 
   describe('wildcards', () => {
-    it('satisfies a wildcard ([EMPTY STRING])', () => {
-      expect(does('1.0.0').satisfy('')).toBe(true);
+    describe('1.0.0 satisfies a wildcard ([EMPTY STRING])', () => {
+      const version = '1.0.0';
+      const specifier = '';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('satisfies a wildcard (*)', () => {
-      expect(does('1.0.0').satisfy('*')).toBe(true);
+    describe('1.0.0 satisfies a wildcard (*)', () => {
+      const version = '1.0.0';
+      const specifier = '*';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('satisfies a wildcard (X)', () => {
-      expect(does('1.0.0').satisfy('X')).toBe(true);
+    describe('1.0.0 satisfies a wildcard (X)', () => {
+      const version = '1.0.0';
+      const specifier = 'X';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('satisfies a wildcard (x)', () => {
-      expect(does('1.0.0').satisfy('x')).toBe(true);
+    describe('1.0.0 satisfies a wildcard (x)', () => {
+      const version = '1.0.0';
+      const specifier = 'x';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('satisfies a wildcard version', () => {
-      expect(does('1.0.0').satisfy('x.x.x')).toBe(true);
+    describe('1.0.0 satisfies a wildcard version (x.x.x)', () => {
+      const version = '1.0.0';
+      const specifier = 'x.x.x';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+  });
+
+  describe('verbatim versions', () => {
+    describe('1.0.0 satisfies 1.0.0', () => {
+      const version = '1.0.0';
+      const specifier = '1.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('1.3.37 satisfies 1.3.37', () => {
+      const version = '1.3.37';
+      const specifier = '1.3.37';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
   });
 
