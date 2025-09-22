@@ -21,7 +21,16 @@ export default class Satisfier {
     // > `[major, minor, patch]` tuple. In other words, this allows patch and minor updates for
     // > versions `1.0.0` and above, patch updates for versions `0.X >=0.1.0`, and no updates for
     // > versions `0.0.X`.
-    if (isNumber(clause.major) && clause.major !== 0) {
+    //
+    // > A missing `minor` and `patch` values will desugar to zero, but also allow flexibility
+    // > within those values, even if the major version is zero.
+    // > - `^1.x` := `>=1.0.0 <2.0.0-0`
+    // > - `^0.x` := `>=0.0.0 <1.0.0-0`
+    if (
+      isNumber(clause.major) &&
+      (clause.major !== 0 ||
+        (clause.major === 0 && clause.minor === NORMALIZED_X_RANGE_CHAR))
+    ) {
       const exclusiveUpperClause = new VersionClause({
         major: clause.major + 1,
         minor: 0,
@@ -32,7 +41,15 @@ export default class Satisfier {
       return this.#isGreaterThanOrEqualTo(clause) && this.#isLessThan(exclusiveUpperClause);
     }
 
-    if (isNumber(clause.minor) && clause.minor !== 0) {
+    // > When parsing caret ranges, a missing `patch` value desugars to the number `0`, but will
+    // > allow flexibility within that value, even if the major and minor versions are both `0`.
+    // > - `^1.2.x` := `>=1.2.0 <2.0.0-0`
+    // > - `^0.0.x` := `>=0.0.0 <0.1.0-0`
+    // > - `^0.0` := `>=0.0.0 <0.1.0-0`
+    if (
+      isNumber(clause.minor) &&
+      (clause.minor !== 0 || clause.patch === NORMALIZED_X_RANGE_CHAR)
+    ) {
       const exclusiveUpperClause = new VersionClause({
         major: clause.major,
         minor: clause.minor + 1,
@@ -131,35 +148,30 @@ export default class Satisfier {
       this.#version.major === clause.major &&
       this.#version.minor === clause.minor &&
       this.#version.patch === clause.patch &&
-      this.#version.prerelease.length > 0 &&
-      clause.prerelease.length > 0
+      (this.#version.prerelease.length > 0 || clause.prerelease.length > 0)
     ) {
       return isPrerelease(this.#version.prerelease).greaterThan(clause.prerelease);
     }
 
     if (typeof clause.major === 'number' && this.#version.major > clause.major) {
       return true;
-    } else if (clause.major === NORMALIZED_X_RANGE_CHAR || this.#version.major <= clause.major) {
+    } else if (clause.major === NORMALIZED_X_RANGE_CHAR || this.#version.major < clause.major) {
       return false;
     }
 
     if (typeof clause.minor === 'number' && this.#version.minor > clause.minor) {
       return true;
-    } else if (clause.minor === NORMALIZED_X_RANGE_CHAR || this.#version.minor <= clause.minor) {
+    } else if (clause.minor === NORMALIZED_X_RANGE_CHAR || this.#version.minor < clause.minor) {
       return false;
     }
 
     if (typeof clause.patch === 'number' && this.#version.patch > clause.patch) {
       return true;
-    } else if (clause.patch === NORMALIZED_X_RANGE_CHAR || this.#version.patch <= clause.patch) {
+    } else if (clause.patch === NORMALIZED_X_RANGE_CHAR || this.#version.patch < clause.patch) {
       return false;
     }
 
-    if (this.#version.prerelease.length === 0 && clause.prerelease.length > 0) {
-      return true;
-    }
-
-    return isPrerelease(this.#version.prerelease).greaterThan(clause.prerelease);
+    return false;
   }
 
   #isGreaterThanOrEqualTo(clause: VersionClause): boolean {
@@ -170,34 +182,34 @@ export default class Satisfier {
     if (
       this.#version.major === clause.major &&
       this.#version.minor === clause.minor &&
-      this.#version.patch === clause.patch
+      this.#version.patch === clause.patch &&
+      (this.#version.prerelease.length > 0 || clause.prerelease.length > 0)
     ) {
       return isPrerelease(this.#version.prerelease).lessThan(clause.prerelease);
     }
 
     if (typeof clause.major === 'number' && this.#version.major < clause.major) {
       return true;
-    } else if (clause.major === NORMALIZED_X_RANGE_CHAR || this.#version.major >= clause.major) {
+    } else if (clause.major === NORMALIZED_X_RANGE_CHAR || this.#version.major > clause.major) {
       return false;
     }
 
     if (typeof clause.minor === 'number' && this.#version.minor < clause.minor) {
       return true;
-    } else if (clause.minor === NORMALIZED_X_RANGE_CHAR || this.#version.minor >= clause.minor) {
+    } else if (clause.minor === NORMALIZED_X_RANGE_CHAR || this.#version.minor > clause.minor) {
       return false;
     }
 
     if (typeof clause.patch === 'number' && this.#version.patch < clause.patch) {
       return true;
-    } else if (clause.patch === NORMALIZED_X_RANGE_CHAR || this.#version.patch >= clause.patch) {
+    } else if (clause.patch === NORMALIZED_X_RANGE_CHAR || this.#version.patch > clause.patch) {
       return false;
     }
 
-    throw new Error('Should we have gotten here?');
+    return false;
   }
 
   #isLessThanOrEqualTo(clause: VersionClause): boolean {
-    // return this.#isEqualTo(clause) || !this.#isGreaterThan(clause);
     return this.#isEqualTo(clause) || this.#isLessThan(clause);
   }
 

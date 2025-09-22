@@ -6,7 +6,8 @@ import {
 import ensureValidComparator from './satisfaction/ensure-valid-comparator';
 import {
   getLogicalAndSpecifiers,
-  getLogicalOrSpecifiers, isHyphenatedRange,
+  getLogicalOrSpecifiers,
+  isHyphenatedRange,
   isLogicalOrSpecifier
 } from './satisfaction/util';
 import VersionClause from './satisfaction/version-clause';

@@ -1,56 +1,6 @@
 import does from '../src/does';
+import semver from 'semver';
 import { describe, expect, it } from 'vitest';
-
-// describe('getCompositeSpecifiers', () => {
-//   it('returns a hyphenated range as a single specifier', () => {
-//     expect(getCompositeSpecifiers('1.0.0 - 5.0.0')).toEqual(['1.0.0 - 5.0.0']);
-//   });
-//
-//   it('collapses whitespace on a hyphenated range', () => {
-//     expect(getCompositeSpecifiers('1.0.0   -   5.0.0')).toEqual(['1.0.0 - 5.0.0']);
-//   });
-//
-//   it('returns two specifiers for a greater than and less than or equal to range', () => {
-//     expect(getCompositeSpecifiers('>1.0.0 <=5.0.0')).toEqual(['>1.0.0', '<=5.0.0']);
-//   });
-//
-//   it('collapses whitespace on a greater than and less than or equal to range', () => {
-//     expect(getCompositeSpecifiers('> 1.0.0 <= 5.0.0')).toEqual(['>1.0.0', '<=5.0.0']);
-//   });
-//
-//   it('returns two specifiers for a caret and less than or equal to range', () => {
-//     expect(getCompositeSpecifiers('^1.0.0 <=1.1.0')).toEqual(['^1.0.0', '<=1.1.0']);
-//   });
-//
-//   it('returns two specifiers for a tilde and less than or equal to range', () => {
-//     expect(getCompositeSpecifiers('~1.0.0 <=1.1.0')).toEqual(['~1.0.0', '<=1.1.0']);
-//   });
-//
-//   it('returns three specifiers for tilde, gt, and lte comparators', () => {
-//     const actual = getCompositeSpecifiers('~1.0.0 >1.0.0 <=1.1.0');
-//     const expected = ['~1.0.0', '>1.0.0', '<=1.1.0'];
-//
-//     expect(actual).toEqual(expected);
-//   });
-// });
-
-// describe('isCompositeSpecifier', () => {
-//   it('returns false for a hyphenated range', () => {
-//     expect(isCompositeSpecifier('1.0.0 - 5.0.0')).toBe(false);
-//   });
-//
-//   it('returns false for a hyphenated range with extra spaces', () => {
-//     expect(isCompositeSpecifier('1.0.0   -   5.0.0')).toBe(false);
-//   });
-//
-//   it('returns true for a greater than and less than or equal range', () => {
-//     expect(isCompositeSpecifier('>1.0.0 <=5.0.0')).toBe(true);
-//   });
-//
-//   it('returns true for a greater than and less than or equal range with spacing', () => {
-//     expect(isCompositeSpecifier('> 1.0.0 <= 5.0.0')).toBe(true);
-//   });
-// });
 
 describe('does', () => {
   it('is a function', () => {
@@ -77,47 +27,793 @@ describe('does', () => {
     it('satisfies a wildcard version', () => {
       expect(does('1.0.0').satisfy('x.x.x')).toBe(true);
     });
-
-    it('satisfies a version verbatim', () => {
-      expect(does('1.0.0').satisfy('1.0.0')).toBe(true);
-    });
-
-    it('satisfies a version with an equality comparator', () => {
-      expect(does('1.0.0').satisfy('=1.0.0')).toBe(true);
-    });
   });
 
   describe('less than (<)', () => {
-    it('reports that 1.0.0 satisfies <5', () => {
-      expect(does('1.0.0').satisfy('<5')).toBe(true);
+    describe('1.0.0 satisfies <5', () => {
+      const version = '1.0.0';
+      const specifier = '<5';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('reports that 1.0.0 satisfies <5.0.0', () => {
-      expect(does('1.0.0').satisfy('<5.0.0')).toBe(true);
+    describe('1.0.0 satisfies <5.0.0', () => {
+      const version = '1.0.0';
+      const specifier = '<5.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('reports that 1.3.37 does not satisfy <1.0.0', () => {
-      expect(does('1.3.37').satisfy('<1.0.0')).toBe(false);
+    describe('1.3.37 satisfies <1.0.0', () => {
+      const version = '1.3.37';
+      const specifier = '<1.0.0';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it.only('reports that 2.0.0-beta.1 satisfies <2.0.0', () => {
-      expect(does('2.0.0-beta.1').satisfy('<2.0.0')).toBe(true);
+    describe('2.0.0-beta.1 satisfies <2.0.0', () => {
+      const version = '2.0.0-beta.1';
+      const specifier = '<2.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('reports that 2.0.0-beta.1 does not satisfy <2.0', () => {
-      expect(does('2.0.0-beta.1').satisfy('<2.0')).toBe(false);
+    describe('2.0.0-beta.1 satisfies <2.0', () => {
+      const version = '2.0.0-beta.1';
+      const specifier = '<2.0';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('reports that 2.0.0 satisfies >2.0.0-beta1', () => {
-      expect(does('2.0.0').satisfy('>2.0.0-beta1')).toBe(false);
+    describe('2.0.0-beta.1 satisfies <2.0.0-rc.1', () => {
+      const version = '2.0.0-beta.1';
+      const specifier = '<2.0.0-rc.1';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('reports that 2.0.0-beta.1 satisfies <2.0.0-rc.1', () => {
-      expect(does('2.0.0-beta.1').satisfy('<2.0.0-rc.1')).toBe(true);
+    describe('2.0.0-rc.1 satisfies <2.0.0-beta.1', () => {
+      const version = '2.0.0-rc.1';
+      const specifier = '<2.0.0-beta.1';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+  });
+
+  describe('less than or equal to (<=)', () => {
+    describe('2.0.0-rc.1 satisfies <=2.0.0-rc.1', () => {
+      const version = '2.0.0-rc.1';
+      const specifier = '<=2.0.0-rc.1';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
 
-    it('reports that 2.0.0-rc.1 does not satisfy <2.0.0-beta.1', () => {
-      expect(does('2.0.0-rc.1').satisfy('<2.0.0-beta.1')).toBe(false);
+    describe('2.0.0-rc.1 satisfies <=2.0.0-rc.2', () => {
+      const version = '2.0.0-rc.1';
+      const specifier = '<=2.0.0-rc.2';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('2.999.500 satisfies <=3.0.0', () => {
+      const version = '2.999.500';
+      const specifier = '<=3.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('2.999.500 satisfies <=3.0.0-beta.1', () => {
+      const version = '2.999.500';
+      const specifier = '<=3.0.0-beta.1';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('5.5.5 satisfies <=3.3.3', () => {
+      const version = '5.5.5';
+      const specifier = '<=3.3.3';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('3.1.5 satisfies <=3.1.5-beta.1', () => {
+      const version = '3.1.5';
+      const specifier = '<=3.1.5-beta.1';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('3.1.5 satisfies <=3.1.6', () => {
+      const version = '3.1.5';
+      const specifier = '<=3.1.6';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+  });
+
+  describe('equal to (=)', () => {
+    describe('7.18.1 satisfies =7.18.1', () => {
+      const version = '7.18.1';
+      const specifier = '=7.18.1';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('7.18.1-beta.1 satisfies =7.18.1', () => {
+      const version = '7.18.1-beta.1';
+      const specifier = '=7.18.1';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+  });
+
+  describe('greater than (>)', () => {
+    describe('2.0.0 satisfies >2.0.0-beta.1', () => {
+      const version = '2.0.0';
+      const specifier = '>2.0.0-beta.1';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('2.8.3 satisfies >2.0.0', () => {
+      const version = '2.8.3';
+      const specifier = '>2.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('2.8.3 satisfies >3.0.0', () => {
+      const version = '2.8.3';
+      const specifier = '>3.0.0';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+  });
+
+  describe('greater than or equal to (>=)', () => {
+    describe('2.8.3 satisfies >=2.0.0', () => {
+      const version = '2.8.3';
+      const specifier = '>=2.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('2.0.1 satisfies >=2.0.0', () => {
+      const version = '2.0.1';
+      const specifier = '>=2.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('2.1.3 satisfies >=2.0.0', () => {
+      const version = '2.1.3';
+      const specifier = '>=2.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('2.1.3 satisfies >=2.1.3', () => {
+      const version = '2.1.3';
+      const specifier = '>=2.1.3';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+  });
+
+  describe('caret range (^)', () => {
+    describe('1.5.6 satisfies ^1.2.3', () => {
+      const version = '1.5.6';
+      const specifier = '^1.2.3';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('2.0.0 satisfies ^1.2.3', () => {
+      const version = '2.0.0';
+      const specifier = '^1.2.3';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.2.94 satisfies ^0.2.3', () => {
+      const version = '0.2.94';
+      const specifier = '^0.2.3';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.3.0 satisfies ^0.2.3', () => {
+      const version = '0.3.0';
+      const specifier = '^0.2.3';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.0.3 satisfies ^0.0.3', () => {
+      const version = '0.0.3';
+      const specifier = '^0.0.3';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.0.4 satisfies ^0.0.3', () => {
+      const version = '0.0.4';
+      const specifier = '^0.0.3';
+      const expected = false;
+
+      it('reports false', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('1.2.3-beta.4 satisfies ^1.2.3-beta.2', () => {
+      const version = '1.2.3-beta.4';
+      const specifier = '^1.2.3-beta.2';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.0.3-beta satisfies ^0.0.3-beta', () => {
+      const version = '0.0.3-beta';
+      const specifier = '^0.0.3-beta';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('1.98.1 satisfies ^1.2.x', () => {
+      const version = '1.98.1';
+      const specifier = '^1.2.x';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.0.32 satisfies ^0.0.x', () => {
+      const version = '0.0.32';
+      const specifier = '^0.0.x';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.0.6 satisfies ^0.0', () => {
+      const version = '0.0.6';
+      const specifier = '^0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('1.7.5 satisfies ^1.x', () => {
+      const version = '1.7.5';
+      const specifier = '^1.x';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.9.6 satisfies ^0.x', () => {
+      const version = '0.9.6';
+      const specifier = '^0.x';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+  });
+
+  describe('tilde range (~)', () => {
+    describe('1.2.13 satisfies ~1.2.3', () => {
+      const version = '1.2.13';
+      const specifier = '~1.2.3';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('1.2.13 satisfies ~1.2', () => {
+      const version = '1.2.13';
+      const specifier = '~1.2';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('1.9.13 satisfies ~1', () => {
+      const version = '1.9.13';
+      const specifier = '~1';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.2.99 satisfies ~0.2.3', () => {
+      const version = '0.2.99';
+      const specifier = '~0.2.3';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.2.99 satisfies ~0.2', () => {
+      const version = '0.2.99';
+      const specifier = '~0.2';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('0.122.99 satisfies ~0', () => {
+      const version = '0.122.99';
+      const specifier = '~0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('1.2.3-beta.4 satisfies ~1.2.3-beta.2', () => {
+      const version = '1.2.3-beta.4';
+      const specifier = '~1.2.3-beta.2';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
     });
   });
 });
