@@ -18,7 +18,11 @@ npm install @radham/semver
 Usage
 -----
 ```javascript
-import { is, parse } from '@radham/semver';
+import { does, is, parse } from '@radham/semver';
+
+// Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
+does('1.2.5').satisfy('~1.2'); // > true
+is.specifier('~1.2').valid(); // > true
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 is('0.5.5-rc.1').valid(); // > true
@@ -44,7 +48,11 @@ parse('v1.5.2-beta.2+fe523');
 If you feel the API is too verbose, convenience methods are available.
 
 ```javascript
-import { is, parse } from '@radham/semver';
+import { does, is, parse } from '@radham/semver';
+
+// Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
+does('1.2.5').satisfy('~1.2'); // > true
+is.specifier('~1.2').valid(); // > true
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 is('0.5.5-rc.1').valid(); // > true
@@ -70,7 +78,11 @@ parse('v1.5.2-beta.2+fe523');
 Or if you find the default imports too ambiguously named.
 
 ```javascript
-import { is as isVersion, parse as parseVersion } from '@radham/semver';
+import { does as doesVersion, is as isVersion, parse as parseVersion } from '@radham/semver';
+
+// Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
+doesVersion('1.2.5').satisfy('~1.2'); // > true
+isVersion.specifier('~1.2').valid(); // > true
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 isVersion('0.5.5-rc.1').valid(); // > true
