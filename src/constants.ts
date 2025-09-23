@@ -82,7 +82,6 @@ export const SPEC_VERSION = '2.0.0';
  * @see https://semver.org/spec/v2.0.0.html#backusnaur-form-grammar-for-valid-semver-versions
  */
 export const VALID_PRERELEASE_AND_BUILD_CHARS = [
-  '-',
   '.',
   '0',
   '1',
@@ -185,6 +184,19 @@ export const VALID_SPECIFIER_VERSION_CORE_CHARS = [
 
 export const VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS =
   VALID_SPECIFIER_VERSION_CORE_CHARS.filter(char => char !== '.');
+
+export const VALID_VERSION_INTEGER_CHARS = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9'
+];
 
 export const VALID_X_RANGE_CHARS = [
   '*',

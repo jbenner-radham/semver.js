@@ -1,9 +1,9 @@
 import { NORMALIZED_X_RANGE_CHAR } from '../constants';
 import isPrerelease from '../is-prerelease';
 import parse from '../parse';
-import parseSpecifier from '../parse-specifier';
 import SemanticVersion from '../semantic-version';
 import { isNumber } from '../util';
+import parseSpecifier from './parse-specifier';
 import VersionClause from './version-clause';
 import VersionRange from './version-range';
 

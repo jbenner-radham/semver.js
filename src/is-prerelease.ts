@@ -117,11 +117,6 @@ class PrereleaseComparator {
   }
 
   lessThan(version = '') {
-    // if (this.equalTo(version)) {
-    //   return false;
-    // }
-    //
-    // return !this.greaterThan(version);
     return !this.equalTo(version) && !this.greaterThan(version);
   }
 

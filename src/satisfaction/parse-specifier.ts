@@ -2,18 +2,18 @@ import {
   VALID_PRERELEASE_AND_BUILD_CHARS,
   VALID_SPECIFIER_COMPARATOR_CHARS,
   VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS
-} from './constants';
-import ensureValidComparator from './satisfaction/ensure-valid-comparator';
+} from '../constants';
+import type { VersionComparator } from '../types';
+import { isEmptyString, trim } from '../util';
+import ensureValidComparator from './ensure-valid-comparator';
 import {
   getLogicalAndSpecifiers,
   getLogicalOrSpecifiers,
   isHyphenatedRange,
   isLogicalOrSpecifier
-} from './satisfaction/util';
-import VersionClause from './satisfaction/version-clause';
-import VersionRange from './satisfaction/version-range';
-import type { VersionComparator } from './types';
-import { isEmptyString, trim } from './util';
+} from './util';
+import VersionClause from './version-clause';
+import VersionRange from './version-range';
 
 function parseHyphenatedRange(value: string): VersionRange {
   type State = 'initialization'
@@ -351,7 +351,7 @@ function parseVersionClause(specifier: string): VersionClause {
 /**
  * Parses a version specifier.
  *
- * Returns a multidimensional array. Each column in a row represents logical AND expressions.
+ * @returns A multidimensional array. Each column in a row represents logical AND expressions.
  * And each row represents logical OR expressions. If there is only one row, no logical OR
  * expressions are present.
  */

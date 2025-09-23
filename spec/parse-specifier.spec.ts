@@ -1,4 +1,4 @@
-import parseSpecifier from '../src/parse-specifier';
+import parseSpecifier from '../src/satisfaction/parse-specifier';
 import { describe, expect, it } from 'vitest';
 
 describe('parseSpecifier', () => {

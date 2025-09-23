@@ -256,6 +256,12 @@ describe('is', () => {
         expect(is('1.0').valid()).toBe(false);
       });
     });
+
+    describe('when passed 1.0.0.0', () => {
+      it('returns false', () => {
+        expect(is('1.0.0.0').valid()).toBe(false);
+      });
+    });
   });
 
   describe('#specifier.valid', () => {
