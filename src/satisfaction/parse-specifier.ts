@@ -9,13 +9,13 @@ import ensureValidComparator from './ensure-valid-comparator';
 import {
   getLogicalAndSpecifiers,
   getLogicalOrSpecifiers,
-  isHyphenatedRange,
+  isHyphenRange,
   isLogicalOrSpecifier
 } from './util';
 import VersionClause from './version-clause';
 import VersionRange from './version-range';
 
-function parseHyphenatedRange(value: string): VersionRange {
+function parseHyphenRange(value: string): VersionRange {
   type State = 'initialization'
     | 'in-major'
     | 'in-minor'
@@ -370,8 +370,8 @@ function parseVersionClause(specifier: string): VersionClause {
  */
 export default function parseSpecifier(value: string): (VersionClause | VersionRange)[][] {
   const parse = (value: string): VersionClause | VersionRange => {
-    return isHyphenatedRange(value)
-      ? parseHyphenatedRange(value)
+    return isHyphenRange(value)
+      ? parseHyphenRange(value)
       : parseVersionClause(value);
   };
 

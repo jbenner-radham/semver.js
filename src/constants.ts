@@ -69,7 +69,7 @@ export const ASCII_SORT_ORDER = [
 
 export const LOGICAL_OR_OPERATOR = '||';
 
-export const HYPHENATED_RANGE_OPERATOR = ' - ';
+export const HYPHEN_RANGE_OPERATOR = ' - ';
 
 export const NORMALIZED_X_RANGE_CHAR = 'x';
 
