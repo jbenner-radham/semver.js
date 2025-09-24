@@ -50,16 +50,7 @@ function parseHyphenatedRange(value: string): VersionRange {
 
   chars.forEach(char => {
     let doNotBufferChar = false;
-    // const isVersionNumberOrXChar = VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char);
 
-    // if (state === 'initialization') {
-    //   if (!isVersionNumberOrXChar && !(isInBound === 'upper' && char === ' ')) {
-    //     throw new TypeError(
-    //       `The character "${char}" is not valid at the start of a hyphenated range specifier`
-    //     );
-    //   }
-    //
-    //   state = 'in-major';
     if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
       switch (state) {
         case 'initialization':
