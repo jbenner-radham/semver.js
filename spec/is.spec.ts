@@ -309,6 +309,10 @@ describe('is', () => {
       expect(is.specifier('1.x+exp.sha.5114f85 - 1.0.0').valid()).toBe(false);
     });
 
+    it('returns false for 1.0.0 - 2.3 .4', () => {
+      expect(is.specifier('1.0.0 - 2.3 .4').valid()).toBe(false);
+    });
+
     it('returns false for ~1.0.0.0', () => {
       expect(is.specifier('~1.0.0.0').valid()).toBe(false);
     });
