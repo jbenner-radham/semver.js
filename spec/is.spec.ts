@@ -297,6 +297,10 @@ describe('is', () => {
       expect(is.specifier('1.2.3 - 2.3.4').valid()).toBe(true);
     });
 
+    it('returns false for 1.x-beta.2 - 2.2.6', () => {
+      expect(is.specifier('1.x-beta.2 - 2.2.6').valid()).toBe(false);
+    });
+
     it('returns false for ~1.0.0.0', () => {
       expect(is.specifier('~1.0.0.0').valid()).toBe(false);
     });

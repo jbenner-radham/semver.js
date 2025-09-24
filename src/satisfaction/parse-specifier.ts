@@ -130,8 +130,6 @@ function parseHyphenatedRange(value: string): VersionRange {
       }
     } else if (char === '-') {
       switch (state) {
-        case 'in-major':
-        case 'in-minor':
         case 'in-patch':
           doNotBufferChar = true;
           state = 'in-prerelease';
@@ -142,7 +140,8 @@ function parseHyphenatedRange(value: string): VersionRange {
           break;
         default:
           throw new TypeError(
-            'A "-" character was found in an invalid position for a hyphenated range specifier'
+            `A "-" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${value}"`
           );
       }
     } else if (versionCoreStates.includes(state)) {
