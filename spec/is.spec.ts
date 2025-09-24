@@ -239,6 +239,18 @@ describe('is', () => {
       });
     });
 
+    describe('when passed 1.0-beta.1', () => {
+      it('returns false', () => {
+        expect(is('1.0-beta.1').valid()).toBe(false);
+      });
+    });
+
+    describe('when passed 1.0.0-beta.1-beta.2', () => {
+      it('returns false', () => {
+        expect(is('1.0.0-beta.1-beta.2').valid()).toBe(false);
+      });
+    });
+
     describe('when passed a.0.0', () => {
       it('returns false', () => {
         expect(is('a.0.0').valid()).toBe(false);
@@ -275,6 +287,14 @@ describe('is', () => {
 
     it('returns true for ^1.x', () => {
       expect(is.specifier('^1.x').valid()).toBe(true);
+    });
+
+    it('returns true for ~1.2.3', () => {
+      expect(is.specifier('~1.2.3').valid()).toBe(true);
+    });
+
+    it('returns true for 1.2.3 - 2.3.4', () => {
+      expect(is.specifier('1.2.3 - 2.3.4').valid()).toBe(true);
     });
 
     it('returns false for ~1.0.0.0', () => {

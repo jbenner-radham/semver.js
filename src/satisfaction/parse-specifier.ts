@@ -45,37 +45,52 @@ function parseHyphenatedRange(value: string): VersionRange {
   const chars = [...value.trim()];
   const prereleaseAndBuildStates: State[] = ['in-prerelease', 'in-build'];
   const versionCoreStates: State[] = ['in-major', 'in-minor', 'in-patch'];
-  let doNotBufferChar = false;
   let isInBound: 'lower' | 'upper' = 'lower';
   let state: State = 'initialization';
 
   chars.forEach(char => {
+    let doNotBufferChar = false;
     const isVersionNumberOrXChar = VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char);
 
-    if (state === 'initialization') {
-      if (!isVersionNumberOrXChar) {
-        throw new TypeError(
-          `The character "${char}" is not valid at the start of a hyphenated range specifier`
-        );
+    // if (state === 'initialization') {
+    //   if (!isVersionNumberOrXChar && !(isInBound === 'upper' && char === ' ')) {
+    //     throw new TypeError(
+    //       `The character "${char}" is not valid at the start of a hyphenated range specifier`
+    //     );
+    //   }
+    //
+    //   state = 'in-major';
+    if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
+      switch (state) {
+        case 'initialization':
+          state = 'in-major';
+          break;
+        case 'in-major':
+        case 'in-minor':
+        case 'in-patch':
+        case 'in-prerelease':
+        case 'in-build':
+          break;
+        default:
+          throw new TypeError(
+            `Character "${char}" is in an invalid position in the "${state}" state`
+          );
       }
-
-      state = 'in-major';
     } else if (char === ' ') {
       switch (state) {
-        case 'in-hyphen':
-          state = 'in-hyphen-trailing-space';
+        case 'initialization':
+        case 'in-space':
+          doNotBufferChar = true;
           break;
+        case 'in-hyphen':
         case 'in-hyphen-trailing-space':
           if (isInBound === 'lower') {
             doNotBufferChar = true;
             isInBound = 'upper';
             state = 'initialization';
           } else {
-            throw new TypeError(`The "${value}" hyphenated range specifier is invalid`);
+            throw new TypeError(`The "${value}" hyphen range specifier is invalid`);
           }
-          break;
-        case 'in-space':
-          doNotBufferChar = true;
           break;
         default:
           doNotBufferChar = true;
@@ -120,6 +135,10 @@ function parseHyphenatedRange(value: string): VersionRange {
         case 'in-patch':
           doNotBufferChar = true;
           state = 'in-prerelease';
+          break;
+        case 'in-space':
+          doNotBufferChar = true;
+          state = 'in-hyphen';
           break;
         default:
           throw new TypeError(
