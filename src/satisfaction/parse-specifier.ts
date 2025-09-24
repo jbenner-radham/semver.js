@@ -143,11 +143,11 @@ function parseHyphenRange(value: string): VersionRange {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         switch (state) {
           case 'in-major':
-            throw new TypeError(`The "${char}" character is invalid for major versions`);
+            throw new TypeError(`The "${char}" character is invalid for MAJOR versions`);
           case 'in-minor':
-            throw new TypeError(`The "${char}" character is invalid for minor versions`);
+            throw new TypeError(`The "${char}" character is invalid for MINOR versions`);
           case 'in-patch':
-            throw new TypeError(`The "${char}" character is invalid for patch versions`);
+            throw new TypeError(`The "${char}" character is invalid for PATCH versions`);
         }
       }
     } else if (prereleaseAndBuildStates.includes(state)) {
@@ -186,11 +186,11 @@ function parseHyphenRange(value: string): VersionRange {
   });
 
   if (!buffer.upper.major) {
-    throw new TypeError('An upper bound for a hyphenated range specifier could not be found');
+    throw new TypeError('An upper bound for a hyphen range specifier could not be found');
   }
 
   if (!buffer.lower.major) {
-    throw new TypeError('A lower bound for a hyphenated range specifier could not be found');
+    throw new TypeError('A lower bound for a hyphen range specifier could not be found');
   }
 
   return new VersionRange({
@@ -244,7 +244,10 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-build':
           break;
         default:
-          throw new TypeError(`Character "${char}" is in an invalid position`);
+          throw new TypeError(
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${specifier}"`
+          );
       }
     } else if (char === '.') {
       switch (state) {
@@ -261,7 +264,8 @@ function parseVersionClause(specifier: string): VersionClause {
           break;
         default:
           throw new TypeError(
-            'A "." character was found in an invalid position for a version specifier'
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${specifier}"`
           );
       }
     } else if (char === '+') {
@@ -275,7 +279,8 @@ function parseVersionClause(specifier: string): VersionClause {
           break;
         default:
           throw new TypeError(
-            'A "+" character was found in an invalid position for a version specifier'
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${specifier}"`
           );
       }
     } else if (char === '-') {
@@ -288,7 +293,8 @@ function parseVersionClause(specifier: string): VersionClause {
           break;
         default:
           throw new TypeError(
-            'A "-" character was found in an invalid position for a version specifier'
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${specifier}"`
           );
       }
     } else if (VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
@@ -297,18 +303,19 @@ function parseVersionClause(specifier: string): VersionClause {
           break;
         default:
           throw new TypeError(
-            `The "${char}" character is in an invalid position for a version specifier`
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${specifier}"`
           );
       }
     } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         switch (state) {
           case 'in-major':
-            throw new TypeError(`The "${char}" character is invalid for major versions`);
+            throw new TypeError(`The "${char}" character is invalid for MAJOR versions`);
           case 'in-minor':
-            throw new TypeError(`The "${char}" character is invalid for minor versions`);
+            throw new TypeError(`The "${char}" character is invalid for MINOR versions`);
           case 'in-patch':
-            throw new TypeError(`The "${char}" character is invalid for patch versions`);
+            throw new TypeError(`The "${char}" character is invalid for PATCH versions`);
         }
       }
     } else if (prereleaseAndBuildStates.includes(state)) {
