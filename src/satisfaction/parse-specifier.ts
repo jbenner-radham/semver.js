@@ -73,7 +73,8 @@ function parseHyphenatedRange(value: string): VersionRange {
           break;
         default:
           throw new TypeError(
-            `Character "${char}" is in an invalid position in the "${state}" state`
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${value}"`
           );
       }
     } else if (char === ' ') {
@@ -89,7 +90,10 @@ function parseHyphenatedRange(value: string): VersionRange {
             isInBound = 'upper';
             state = 'initialization';
           } else {
-            throw new TypeError(`The "${value}" hyphen range specifier is invalid`);
+            throw new TypeError(
+              `A "${char}" character was found in an invalid position in the "${state}" state` +
+              ` while parsing "${value}"`
+            );
           }
           break;
         default:
@@ -111,13 +115,12 @@ function parseHyphenatedRange(value: string): VersionRange {
           break;
         default:
           throw new TypeError(
-            'A "." character was found in an invalid position for a hyphenated range specifier'
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${value}"`
           );
       }
     } else if (char === '+') {
       switch (state) {
-        case 'in-major':
-        case 'in-minor':
         case 'in-patch':
         case 'in-prerelease':
           doNotBufferChar = true;
@@ -125,7 +128,8 @@ function parseHyphenatedRange(value: string): VersionRange {
           break;
         default:
           throw new TypeError(
-            'A "+" character was found in an invalid position for a hyphenated range specifier'
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
+            ` parsing "${value}"`
           );
       }
     } else if (char === '-') {
@@ -140,7 +144,7 @@ function parseHyphenatedRange(value: string): VersionRange {
           break;
         default:
           throw new TypeError(
-            `A "-" character was found in an invalid position in the "${state}" state while` +
+            `A "${char}" character was found in an invalid position in the "${state}" state while` +
             ` parsing "${value}"`
           );
       }
