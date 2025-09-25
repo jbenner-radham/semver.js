@@ -65,7 +65,7 @@ export const ASCII_SORT_ORDER = [
   'x',
   'y',
   'z'
-];
+] as const;
 
 export const LOGICAL_OR_OPERATOR = '||';
 
@@ -145,7 +145,7 @@ export const VALID_PRERELEASE_AND_BUILD_CHARS = [
   'x',
   'y',
   'z'
-];
+] as const;
 
 export const VALID_SPECIFIER_COMPARATORS = [
   '<',
@@ -155,7 +155,7 @@ export const VALID_SPECIFIER_COMPARATORS = [
   '>=',
   '^',
   '~'
-];
+] as const;
 
 export const VALID_SPECIFIER_COMPARATOR_CHARS = [
   '<',
@@ -163,7 +163,7 @@ export const VALID_SPECIFIER_COMPARATOR_CHARS = [
   '>',
   '^',
   '~'
-];
+] as const;
 
 export const VALID_SPECIFIER_VERSION_CORE_CHARS = [
   '*',
@@ -180,7 +180,7 @@ export const VALID_SPECIFIER_VERSION_CORE_CHARS = [
   '9',
   'X',
   'x'
-];
+] as const;
 
 export const VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS =
   VALID_SPECIFIER_VERSION_CORE_CHARS.filter(char => char !== '.');
@@ -196,10 +196,10 @@ export const VALID_VERSION_DIGIT_CHARS = [
   '7',
   '8',
   '9'
-];
+] as const;
 
 export const VALID_X_RANGE_CHARS = [
   '*',
   'X',
   'x'
-];
+] as const;
