@@ -1,19 +1,19 @@
+import { ASCII_SORT_ORDER } from '../constants';
 import parsePrerelease from '../parse-prerelease';
 import { isInteger, isString } from '../util';
-import { ASCII_SORT_ORDER } from '../constants';
 
 export default class PrereleaseComparator {
   readonly #prerelease: string;
 
-  constructor(prerelease = '') {
+  constructor(prerelease: string) {
     this.#prerelease = prerelease;
   }
 
-  equalTo(prerelease = '') {
+  equalTo(prerelease: string) {
     return this.#prerelease === prerelease;
   }
 
-  greaterThan(prerelease = '') {
+  greaterThan(prerelease: string) {
     if (this.#prerelease.length === 0 && prerelease.length > 0) {
       return true;
     } else if (this.#prerelease.length > 0 && prerelease.length === 0) {
@@ -93,15 +93,15 @@ export default class PrereleaseComparator {
     return false;
   }
 
-  greaterThanOrEqualTo(prerelease = '') {
+  greaterThanOrEqualTo(prerelease: string) {
     return this.greaterThan(prerelease) || this.equalTo(prerelease);
   }
 
-  lessThan(prerelease = '') {
+  lessThan(prerelease: string) {
     return !this.equalTo(prerelease) && !this.greaterThan(prerelease);
   }
 
-  lessThanOrEqualTo(prerelease = '') {
+  lessThanOrEqualTo(prerelease: string) {
     return this.lessThan(prerelease) || this.equalTo(prerelease);
   }
 }
