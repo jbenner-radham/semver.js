@@ -316,5 +316,21 @@ describe('is', () => {
     it('returns false for ~1.0.0.0', () => {
       expect(is.specifier('~1.0.0.0').valid()).toBe(false);
     });
+
+    it('returns false for 1.x 1.0.0 - 2.0.0', () => {
+      expect(is.specifier('1.x 1.0.0 - 2.0.0').valid()).toBe(false);
+    });
+
+    it('returns true for 1.x.x-beta.1 - 2.0.0', () => {
+      expect(is.specifier('1.x.x-beta.1 - 2.0.0').valid()).toBe(true);
+    });
+
+    it('returns true for 1.0.0 - 2.0.0-rc.2', () => {
+      expect(is.specifier('1.0.0 - 2.0.0-rc.2').valid()).toBe(true);
+    });
+
+    it('returns true for 1.0.0 - 1.x.x', () => {
+      expect(is.specifier('1.0.0 - 1.x.x').valid()).toBe(true);
+    });
   });
 });

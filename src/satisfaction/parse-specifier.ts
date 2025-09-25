@@ -382,6 +382,8 @@ export default function parseSpecifier(value: string): (VersionClause | VersionR
       : parseVersionClause(value);
   };
 
+  let specifiers: (VersionClause | VersionRange)[][] = [];
+
   if (isLogicalOrSpecifier(value)) {
     const logicalOrSpecifiers = getLogicalOrSpecifiers(value);
     const isInvalidLogicalOr = logicalOrSpecifiers.map(trim).some(isEmptyString);
@@ -390,10 +392,35 @@ export default function parseSpecifier(value: string): (VersionClause | VersionR
       throw new TypeError(`The specifier "${value}" has one or more invalid logical OR operators`);
     }
 
-    return logicalOrSpecifiers.map(logicalOrSpecifier =>
+    specifiers = logicalOrSpecifiers.map(logicalOrSpecifier =>
       getLogicalAndSpecifiers(logicalOrSpecifier).map(parse)
     );
+  } else {
+    specifiers = [getLogicalAndSpecifiers(value).map(parse)];
   }
 
-  return [getLogicalAndSpecifiers(value).map(parse)];
+  specifiers.forEach(logicalAndSpecifiers => {
+    let clauseIsPresent = false;
+    let rangeIsPresent = false;
+
+    logicalAndSpecifiers.forEach(specifier => {
+      if (specifier instanceof VersionClause) {
+        clauseIsPresent = true;
+      } else if (specifier instanceof VersionRange) {
+        rangeIsPresent = true;
+      } else {
+        const type = Object.getPrototypeOf(specifier).constructor.name;
+
+        throw new TypeError(`Invalid instance of type "${type}" encountered while parsing`);
+      }
+    });
+
+    if (clauseIsPresent && rangeIsPresent) {
+      throw new TypeError(
+        `Both a version clause and hyphen range are grouped by an AND operator in "${value}"`
+      );
+    }
+  });
+
+  return specifiers;
 }

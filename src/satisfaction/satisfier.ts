@@ -223,31 +223,13 @@ export default class Satisfier {
   satisfy(specifier: string): boolean {
     const specifiers = parseSpecifier(specifier);
     const satisfactions = specifiers.map(logicalAndSpecifiers => {
-      let clauseIsPresent = false;
-      let rangeIsPresent = false;
-
-      const isSatisfied = logicalAndSpecifiers.every(specifier => {
+      return logicalAndSpecifiers.every(specifier => {
         if (specifier instanceof VersionClause) {
-          clauseIsPresent = true;
-
           return this.#isClauseSatisfied(specifier);
         } else if (specifier instanceof VersionRange) {
-          rangeIsPresent = true;
-
           return this.#inHyphenRange(specifier);
-        } else {
-          const type = Object.getPrototypeOf(specifier).constructor.name;
-
-          throw new TypeError(`Invalid specifier of type "${type}"`);
         }
       });
-
-      // Both a clause and a range cannot be present or a specifier will not be satisfied.
-      if (clauseIsPresent && rangeIsPresent) {
-        return false;
-      }
-
-      return isSatisfied;
     });
 
     return satisfactions.some(satisfaction => satisfaction);
