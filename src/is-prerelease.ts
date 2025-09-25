@@ -1,5 +1,6 @@
 import { ASCII_SORT_ORDER } from './constants.js';
 import parsePrerelease from './parse-prerelease.js';
+import { isInteger, isString } from './util';
 
 function getLongestLength(a: (number | string)[] = [], b: (number | string)[] = []): number {
   if (a.length === b.length) {
@@ -11,14 +12,6 @@ function getLongestLength(a: (number | string)[] = [], b: (number | string)[] = 
   }
 
   return b.length;
-}
-
-function isInteger(value: unknown): value is number {
-  return Number.isInteger(value);
-}
-
-function isString(value: unknown): value is string {
-  return typeof value === 'string';
 }
 
 class PrereleaseComparator {
