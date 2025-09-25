@@ -49,7 +49,7 @@ function parseHyphenRange(value: string): VersionRange {
   let state: State = 'initialization';
 
   chars.forEach(char => {
-    let doNotBufferChar = false;
+    let doNotBuffer = false;
 
     if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
       switch (state) {
@@ -72,12 +72,12 @@ function parseHyphenRange(value: string): VersionRange {
       switch (state) {
         case 'initialization':
         case 'in-space':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           break;
         case 'in-hyphen':
         case 'in-hyphen-trailing-space':
           if (isInBound === 'lower') {
-            doNotBufferChar = true;
+            doNotBuffer = true;
             isInBound = 'upper';
             state = 'initialization';
           } else {
@@ -88,17 +88,17 @@ function parseHyphenRange(value: string): VersionRange {
           }
           break;
         default:
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-space';
       }
     } else if (char === '.') {
       switch (state) {
         case 'in-major':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-minor';
           break;
         case 'in-minor':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-patch';
           break;
         case 'in-prerelease':
@@ -114,7 +114,7 @@ function parseHyphenRange(value: string): VersionRange {
       switch (state) {
         case 'in-patch':
         case 'in-prerelease':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-build';
           break;
         default:
@@ -126,11 +126,11 @@ function parseHyphenRange(value: string): VersionRange {
     } else if (char === '-') {
       switch (state) {
         case 'in-patch':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-prerelease';
           break;
         case 'in-space':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-hyphen';
           break;
         default:
@@ -162,7 +162,7 @@ function parseHyphenRange(value: string): VersionRange {
     }
 
     // The state has been updated by this point so we can act on it.
-    if (doNotBufferChar) {
+    if (doNotBuffer) {
       return;
     }
 
