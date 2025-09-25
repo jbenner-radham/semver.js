@@ -138,7 +138,6 @@ export default class Satisfier {
       satisfiesMajor &&
       satisfiesMinor &&
       satisfiesPatch &&
-      satisfiesPatch &&
       satisfiesPrerelease
     );
   }
