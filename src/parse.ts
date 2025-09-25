@@ -1,4 +1,4 @@
-import { VALID_PRERELEASE_AND_BUILD_CHARS, VALID_VERSION_INTEGER_CHARS } from './constants';
+import { VALID_PRERELEASE_AND_BUILD_CHARS, VALID_VERSION_DIGIT_CHARS } from './constants';
 import parseBuild from './parse-build';
 import parsePrerelease from './parse-prerelease';
 import SemanticVersion from './semantic-version';
@@ -28,7 +28,7 @@ export default function parse(version: string): SemanticVersion {
   chars.forEach(char => {
     let doNotBuffer = false;
 
-    if (VALID_VERSION_INTEGER_CHARS.includes(char)) {
+    if (VALID_VERSION_DIGIT_CHARS.includes(char)) {
       switch (state) {
         case 'initialization':
           state = 'in-major';

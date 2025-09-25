@@ -185,7 +185,7 @@ export const VALID_SPECIFIER_VERSION_CORE_CHARS = [
 export const VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS =
   VALID_SPECIFIER_VERSION_CORE_CHARS.filter(char => char !== '.');
 
-export const VALID_VERSION_INTEGER_CHARS = [
+export const VALID_VERSION_DIGIT_CHARS = [
   '0',
   '1',
   '2',
@@ -202,16 +202,4 @@ export const VALID_X_RANGE_CHARS = [
   '*',
   'X',
   'x'
-];
-
-const NONBREAKING_SPACE_CHAR = String.fromCharCode(160);
-
-const SPACE_CHAR = String.fromCharCode(32);
-
-const TAB_CHAR = String.fromCharCode(9);
-
-export const WHITESPACE_CHARS = [
-  TAB_CHAR,
-  SPACE_CHAR,
-  NONBREAKING_SPACE_CHAR
 ];
