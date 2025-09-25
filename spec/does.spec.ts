@@ -432,6 +432,24 @@ describe('does', () => {
   });
 
   describe('greater than (>)', () => {
+    describe('2.0.0 satisfies >1.0.0', () => {
+      const version = '2.0.0';
+      const specifier = '>1.0.0';
+      const expected = true;
+
+      it('reports true', () => {
+        const actual = does(version).satisfy(specifier);
+
+        expect(actual).toBe(expected);
+      });
+
+      it('matches the results of the npm semver module', () => {
+        const actual = semver.satisfies(version, specifier, { includePrerelease: true });
+
+        expect(actual).toBe(expected);
+      });
+    });
+
     describe('2.0.0 satisfies >2.0.0-beta.1', () => {
       const version = '2.0.0';
       const specifier = '>2.0.0-beta.1';

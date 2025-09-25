@@ -171,7 +171,7 @@ export default class Satisfier {
       return false;
     }
 
-    return false;
+    throw new TypeError('Should not reach the end of method');
   }
 
   #isGreaterThanOrEqualTo(clause: VersionClause): boolean {
@@ -206,7 +206,7 @@ export default class Satisfier {
       return false;
     }
 
-    return false;
+    throw new TypeError('Should not reach the end of method');
   }
 
   #isLessThanOrEqualTo(clause: VersionClause): boolean {
