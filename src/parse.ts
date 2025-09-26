@@ -144,7 +144,7 @@ export default function parse(version: string): SemanticVersion {
     }
   });
 
-  if (buffer.prerelease.length > 0) {
+  if (buffer.prerelease.length) {
     try {
       parsePrerelease(buffer.prerelease);
     } catch (error) {
@@ -156,7 +156,7 @@ export default function parse(version: string): SemanticVersion {
     }
   }
 
-  if (buffer.build.length > 0) {
+  if (buffer.build.length) {
     try {
       parseBuild(buffer.build);
     } catch (error) {

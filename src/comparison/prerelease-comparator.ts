@@ -14,9 +14,9 @@ export default class PrereleaseComparator {
   }
 
   greaterThan(prerelease: string) {
-    if (this.#prerelease.length === 0 && prerelease.length > 0) {
+    if (!this.#prerelease.length && prerelease.length) {
       return true;
-    } else if (this.#prerelease.length > 0 && prerelease.length === 0) {
+    } else if (this.#prerelease.length && !prerelease.length) {
       return false;
     }
 

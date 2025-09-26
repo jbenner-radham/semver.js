@@ -147,7 +147,7 @@ export default class Satisfier {
       this.#version.major === clause.major &&
       this.#version.minor === clause.minor &&
       this.#version.patch === clause.patch &&
-      (this.#version.prerelease.length > 0 || clause.prerelease.length > 0)
+      (this.#version.prerelease.length || clause.prerelease.length)
     ) {
       return isPrerelease(this.#version.prerelease).greaterThan(clause.prerelease);
     }
@@ -182,7 +182,7 @@ export default class Satisfier {
       this.#version.major === clause.major &&
       this.#version.minor === clause.minor &&
       this.#version.patch === clause.patch &&
-      (this.#version.prerelease.length > 0 || clause.prerelease.length > 0)
+      (this.#version.prerelease.length || clause.prerelease.length)
     ) {
       return isPrerelease(this.#version.prerelease).lessThan(clause.prerelease);
     }
