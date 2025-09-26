@@ -21,7 +21,6 @@ function parseHyphenRange(specifier: string): VersionRange {
     | 'in-minor'
     | 'in-patch'
     | 'in-prerelease'
-    | 'in-build'
     | 'in-space'
     | 'in-hyphen'
     | 'in-hyphen-trailing-space';
@@ -31,19 +30,16 @@ function parseHyphenRange(specifier: string): VersionRange {
       major: '',
       minor: '',
       patch: '',
-      prerelease: '',
-      build: ''
+      prerelease: ''
     },
     upper: {
       major: '',
       minor: '',
       patch: '',
-      prerelease: '',
-      build: ''
+      prerelease: ''
     }
   };
   const chars = [...specifier.trim()];
-  const prereleaseAndBuildStates: State[] = ['in-prerelease', 'in-build'];
   const versionCoreStates: State[] = ['in-major', 'in-minor', 'in-patch'];
   let isInBound: 'lower' | 'upper' = 'lower';
   let state: State = 'initialization';
@@ -60,7 +56,6 @@ function parseHyphenRange(specifier: string): VersionRange {
         case 'in-minor':
         case 'in-patch':
         case 'in-prerelease':
-        case 'in-build':
           break;
         default:
           throw new TypeError(
@@ -102,7 +97,6 @@ function parseHyphenRange(specifier: string): VersionRange {
           state = 'in-patch';
           break;
         case 'in-prerelease':
-        case 'in-build':
           break;
         default:
           throw new TypeError(
@@ -114,9 +108,7 @@ function parseHyphenRange(specifier: string): VersionRange {
       switch (state) {
         case 'in-patch':
         case 'in-prerelease':
-          doNotBuffer = true;
-          state = 'in-build';
-          break;
+          throw new TypeError(`Build metadata found in "${specifier}"`);
         default:
           throw new TypeError(
             `A "${char}" character was found in an invalid position in the "${state}" state while` +
@@ -156,26 +148,22 @@ function parseHyphenRange(specifier: string): VersionRange {
             );
         }
       }
-    } else if (prereleaseAndBuildStates.includes(state)) {
+    } else if (state === 'in-prerelease') {
       if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
         switch (state) {
           case 'in-prerelease':
             throw new TypeError(
               `The "${char}" character is invalid for a pre-release in "${specifier}"`
             );
-          case 'in-build':
-            throw new TypeError(
-              `The "${char}" character is invalid for a build in "${specifier}"`
-            );
         }
       }
     }
 
-    // The state has been updated by this point so we can act on it.
     if (doNotBuffer) {
       return;
     }
 
+    // The state has been updated by this point so we can act on it.
     switch (state) {
       case 'in-major':
         buffer[isInBound].major += char;
@@ -188,9 +176,6 @@ function parseHyphenRange(specifier: string): VersionRange {
         break;
       case 'in-prerelease':
         buffer[isInBound].prerelease += char;
-        break;
-      case 'in-build':
-        buffer[isInBound].build += char;
         break;
       default:
         throw new TypeError(`In invalid state "${state}" in "${specifier}"`);
@@ -222,7 +207,6 @@ function parseVersionClause(specifier: string): VersionClause {
     | 'in-minor'
     | 'in-patch'
     | 'in-prerelease'
-    | 'in-build'
     | 'in-space';
 
   const buffer = {
@@ -234,7 +218,6 @@ function parseVersionClause(specifier: string): VersionClause {
     build: ''
   };
   const chars = [...specifier.trim()];
-  const prereleaseAndBuildStates: State[] = ['in-prerelease', 'in-build'];
   const versionCoreStates: State[] = ['in-major', 'in-minor', 'in-patch'];
   let state: State = 'initialization';
 
@@ -257,7 +240,6 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-minor':
         case 'in-patch':
         case 'in-prerelease':
-        case 'in-build':
           break;
         default:
           throw new TypeError(
@@ -276,7 +258,6 @@ function parseVersionClause(specifier: string): VersionClause {
           state = 'in-patch';
           break;
         case 'in-prerelease':
-        case 'in-build':
           break;
         default:
           throw new TypeError(
@@ -290,9 +271,7 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-minor':
         case 'in-patch':
         case 'in-prerelease':
-          doNotBufferChar = true;
-          state = 'in-build';
-          break;
+          throw new TypeError(`Build metadata found in "${specifier}"`);
         default:
           throw new TypeError(
             `A "${char}" character was found in an invalid position in the "${state}" state while` +
@@ -340,26 +319,22 @@ function parseVersionClause(specifier: string): VersionClause {
             );
         }
       }
-    } else if (prereleaseAndBuildStates.includes(state)) {
+    } else if (state === 'in-prerelease') {
       if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
         switch (state) {
           case 'in-prerelease':
             throw new TypeError(
               `The "${char}" character is invalid for a pre-release in "${specifier}"`
             );
-          case 'in-build':
-            throw new TypeError(
-              `The "${char}" character is invalid for a build in "${specifier}"`
-            );
         }
       }
     }
 
-    // The state has been updated by this point so we can act on it.
     if (doNotBufferChar) {
       return;
     }
 
+    // The state has been updated by this point so we can act on it.
     switch (state) {
       case 'in-comparator':
         buffer.comparator += char;
@@ -376,9 +351,6 @@ function parseVersionClause(specifier: string): VersionClause {
       case 'in-prerelease':
         buffer.prerelease += char;
         break;
-      case 'in-build':
-        buffer.build += char;
-        break;
       default:
         throw new TypeError(`In invalid state "${state}" in "${specifier}"`);
     }
@@ -387,12 +359,8 @@ function parseVersionClause(specifier: string): VersionClause {
   ensureValidComparator(buffer.comparator);
 
   return new VersionClause({
-    comparator: buffer.comparator as VersionComparator,
-    major: buffer.major,
-    minor: buffer.minor,
-    patch: buffer.patch,
-    prerelease: buffer.prerelease,
-    build: buffer.build
+    ...buffer,
+    comparator: buffer.comparator as VersionComparator
   });
 }
 
@@ -410,7 +378,7 @@ export default function parseSpecifier(specifier: string): (VersionClause | Vers
       : parseVersionClause(value);
   };
 
-  let specifiers: (VersionClause | VersionRange)[][] = [];
+  let specifiers: (VersionClause | VersionRange)[][] = [[]];
 
   if (isLogicalOrSpecifier(specifier)) {
     const logicalOrSpecifiers = getLogicalOrSpecifiers(specifier);

@@ -14,8 +14,6 @@ export default class VersionClause {
 
   readonly #prerelease: string;
 
-  readonly #build: string;
-
   get comparator(): VersionComparator {
     return this.#comparator;
   }
@@ -34,10 +32,6 @@ export default class VersionClause {
 
   get prerelease(): string {
     return this.#prerelease;
-  }
-
-  get build(): string {
-    return this.#build;
   }
 
   #normalizeComparator(value: VersionComparator | ''): VersionComparator {
@@ -61,15 +55,13 @@ export default class VersionClause {
     major,
     minor = '',
     patch = '',
-    prerelease = '',
-    build = ''
+    prerelease = ''
   }: {
     comparator?: VersionComparator;
     major: number | string;
     minor?: number | string;
     patch?: number | string;
     prerelease?: string;
-    build?: string;
   }) {
     ensureValidComparator(comparator);
 
@@ -78,25 +70,14 @@ export default class VersionClause {
     this.#minor = this.#normalizeNumberOrXRange(minor);
     this.#patch = this.#normalizeNumberOrXRange(patch);
     this.#prerelease = prerelease;
-    this.#build = build;
   }
 
   toString(): string {
     const versionCore = `${this.major}.${this.minor}.${this.patch}`;
 
-    if (this.prerelease.length && this.build.length) {
-      return `${this.comparator}${versionCore}-${this.prerelease}+${this.build}`;
-    }
-
-    if (this.prerelease.length && !this.build.length) {
-      return `${this.comparator}${versionCore}-${this.prerelease}`;
-    }
-
-    if (!this.prerelease.length && this.build.length) {
-      return `${this.comparator}${versionCore}+${this.build}`;
-    }
-
-    return `${this.comparator}${versionCore}`;
+    return this.prerelease.length
+      ? `${this.comparator}${versionCore}-${this.prerelease}`
+      : `${this.comparator}${versionCore}`;
   }
 
   valueOf(): {
@@ -105,15 +86,13 @@ export default class VersionClause {
     minor: VersionNumberOrXRange;
     patch: VersionNumberOrXRange;
     prerelease: string;
-    build: string;
   } {
     return {
       comparator: this.#comparator,
       major: this.#major,
       minor: this.#minor,
       patch: this.#patch,
-      prerelease: this.#prerelease,
-      build: this.#build
+      prerelease: this.#prerelease
     };
   }
 }

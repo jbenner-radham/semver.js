@@ -301,8 +301,12 @@ describe('is', () => {
       expect(is.specifier('1.x-beta.2 - 2.2.6').valid()).toBe(false);
     });
 
-    it('returns true for 1.0.0-beta+exp.sha.5114f85 - 1.0.0', () => {
-      expect(is.specifier('1.0.0-beta+exp.sha.5114f85 - 1.0.0').valid()).toBe(true);
+    it('returns false for 1.x-rc.1 - 1.0.0', () => {
+      expect(is.specifier('1.x-rc.1 - 1.0.0').valid()).toBe(false);
+    });
+
+    it('returns false for 1.0.0-beta+exp.sha.5114f85 - 1.0.0', () => {
+      expect(is.specifier('1.0.0-beta+exp.sha.5114f85 - 1.0.0').valid()).toBe(false);
     });
 
     it('returns false for 1.x+exp.sha.5114f85 - 1.0.0', () => {
