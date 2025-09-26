@@ -1,44 +1,44 @@
-import isIntLike from '../src/is-int-like.js';
+import { isIntegerLike } from '../src/util';
 import { describe, expect, it } from 'vitest';
 
-describe('isIntLike', () => {
+describe('isIntegerLike', () => {
   it('is a function', () => {
-    expect(isIntLike).toBeTypeOf('function');
+    expect(isIntegerLike).toBeTypeOf('function');
   });
 
   it('returns a boolean', () => {
-    expect(isIntLike('1')).toBeTypeOf('boolean');
+    expect(isIntegerLike('1')).toBeTypeOf('boolean');
   });
 
   it('returns true when passed an integer', () => {
-    expect(isIntLike(13)).toBe(true);
+    expect(isIntegerLike(13)).toBe(true);
   });
 
   it('returns true when passed a string integer', () => {
-    expect(isIntLike('55')).toBe(true);
+    expect(isIntegerLike('55')).toBe(true);
   });
 
   it('returns false when passed a float', () => {
-    expect(isIntLike(3.14159)).toBe(false);
+    expect(isIntegerLike(3.14159)).toBe(false);
   });
 
   it('returns false when passed a string float', () => {
-    expect(isIntLike('1.337')).toBe(false);
+    expect(isIntegerLike('1.337')).toBe(false);
   });
 
   it('returns false when passed a word', () => {
-    expect(isIntLike('Hello!')).toBe(false);
+    expect(isIntegerLike('Hello!')).toBe(false);
   });
 
   it('returns false when passed NaN', () => {
-    expect(isIntLike(NaN)).toBe(false);
+    expect(isIntegerLike(NaN)).toBe(false);
   });
 
   it('returns false when passed an array', () => {
-    expect(isIntLike([])).toBe(false);
+    expect(isIntegerLike([])).toBe(false);
   });
 
   it('returns false when passed an object', () => {
-    expect(isIntLike({})).toBe(false);
+    expect(isIntegerLike({})).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 import { VALID_PRERELEASE_AND_BUILD_CHARS } from './constants.js';
-import isIntLike from './is-int-like.js';
+import { isIntegerLike } from './util';
 
 export default function parseBuild(value: string): (number | string)[] {
   const chars = [...value];
@@ -31,6 +31,6 @@ export default function parseBuild(value: string): (number | string)[] {
   }
 
   return identifiers.map(identifier =>
-    isIntLike(identifier) ? Number.parseInt(identifier) : identifier
+    isIntegerLike(identifier) ? Number.parseInt(identifier) : identifier
   );
 }

@@ -6,6 +6,26 @@ export function isInteger(value: unknown): value is number {
   return typeof value === 'number' && Number.isInteger(value);
 }
 
+export function isIntegerLike(value: unknown): boolean {
+  if (Number.isNaN(value)) {
+    return false;
+  }
+
+  const parsedInt = Number.parseInt(value as string);
+
+  // Handle floats in a string.
+  if (typeof value === 'string' && `${parsedInt}` !== value) {
+    return false;
+  }
+
+  // Handle floats.
+  if (typeof value === 'number' && parsedInt !== value) {
+    return false;
+  }
+
+  return !Number.isNaN(parsedInt);
+}
+
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }

@@ -1,6 +1,6 @@
 import { NORMALIZED_X_RANGE_CHAR, VALID_X_RANGE_CHARS } from '../constants';
-import isIntLike from '../is-int-like';
 import type { VersionComparator, VersionNumberOrXRange } from '../types';
+import { isIntegerLike } from '../util';
 import ensureValidComparator from './ensure-valid-comparator';
 
 export default class VersionClause {
@@ -39,7 +39,7 @@ export default class VersionClause {
   }
 
   #normalizeNumberOrXRange(value: number | string): VersionNumberOrXRange {
-    if (isIntLike(value)) {
+    if (isIntegerLike(value)) {
       return Number.parseInt(value as string);
     }
 

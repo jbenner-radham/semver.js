@@ -1,5 +1,5 @@
 import { VALID_PRERELEASE_AND_BUILD_CHARS } from './constants.js';
-import isIntLike from './is-int-like.js';
+import { isIntegerLike } from './util';
 
 export default function parsePrerelease(value: string): (number | string)[] {
   const chars = [...value];
@@ -17,7 +17,7 @@ export default function parsePrerelease(value: string): (number | string)[] {
     errors.push(new TypeError(`Pre-release identifiers must not be empty`));
   }
 
-  if (identifiers.some(identifier => isIntLike(identifier) && identifier.startsWith('0'))) {
+  if (identifiers.some(identifier => isIntegerLike(identifier) && identifier.startsWith('0'))) {
     errors.push(new TypeError('Pre-release numeric identifiers must not include leading zeroes'));
   }
 
@@ -35,6 +35,6 @@ export default function parsePrerelease(value: string): (number | string)[] {
   }
 
   return identifiers.map(identifier =>
-    isIntLike(identifier) ? Number.parseInt(identifier) : identifier
+    isIntegerLike(identifier) ? Number.parseInt(identifier) : identifier
   );
 }
