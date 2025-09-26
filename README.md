@@ -18,7 +18,10 @@ npm install @radham/semver
 Usage
 -----
 ```javascript
-import { does, is, parse } from '@radham/semver';
+import { SPEC_VERSION, does, is, parse } from '@radham/semver';
+
+// The implemented version of the Semantic Versioning specification.
+console.log(SPEC_VERSION); // > '2.0.0'
 
 // Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
 does('1.2.5').satisfy('~1.2'); // > true
@@ -48,7 +51,10 @@ parse('v1.5.2-beta.2+fe523');
 If you feel the API is too verbose, convenience methods are available.
 
 ```javascript
-import { does, is, parse } from '@radham/semver';
+import { SPEC_VERSION, does, is, parse } from '@radham/semver';
+
+// The implemented version of the Semantic Versioning specification.
+console.log(SPEC_VERSION); // > '2.0.0'
 
 // Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
 does('1.2.5').satisfy('~1.2'); // > true
@@ -78,7 +84,10 @@ parse('v1.5.2-beta.2+fe523');
 Or if you find the default imports too ambiguously named.
 
 ```javascript
-import { does as doesVersion, is as isVersion, parse as parseVersion } from '@radham/semver';
+import { SPEC_VERSION, does as doesVersion, is as isVersion, parse as parseVersion } from '@radham/semver';
+
+// The implemented version of the Semantic Versioning specification.
+console.log(SPEC_VERSION); // > '2.0.0'
 
 // Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
 doesVersion('1.2.5').satisfy('~1.2'); // > true
