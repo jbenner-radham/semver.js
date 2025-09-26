@@ -15,7 +15,7 @@ import {
 import VersionClause from './version-clause';
 import VersionRange from './version-range';
 
-function parseHyphenRange(value: string): VersionRange {
+function parseHyphenRange(specifier: string): VersionRange {
   type State = 'initialization'
     | 'in-major'
     | 'in-minor'
@@ -42,7 +42,7 @@ function parseHyphenRange(value: string): VersionRange {
       build: ''
     }
   };
-  const chars = [...value.trim()];
+  const chars = [...specifier.trim()];
   const prereleaseAndBuildStates: State[] = ['in-prerelease', 'in-build'];
   const versionCoreStates: State[] = ['in-major', 'in-minor', 'in-patch'];
   let isInBound: 'lower' | 'upper' = 'lower';
@@ -65,7 +65,7 @@ function parseHyphenRange(value: string): VersionRange {
         default:
           throw new TypeError(
             `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${value}"`
+            ` parsing "${specifier}"`
           );
       }
     } else if (char === ' ') {
@@ -83,7 +83,7 @@ function parseHyphenRange(value: string): VersionRange {
           } else {
             throw new TypeError(
               `A "${char}" character was found in an invalid position in the "${state}" state` +
-              ` while parsing "${value}"`
+              ` while parsing "${specifier}"`
             );
           }
           break;
@@ -107,7 +107,7 @@ function parseHyphenRange(value: string): VersionRange {
         default:
           throw new TypeError(
             `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${value}"`
+            ` parsing "${specifier}"`
           );
       }
     } else if (char === '+') {
@@ -120,7 +120,7 @@ function parseHyphenRange(value: string): VersionRange {
         default:
           throw new TypeError(
             `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${value}"`
+            ` parsing "${specifier}"`
           );
       }
     } else if (char === '-') {
@@ -136,7 +136,7 @@ function parseHyphenRange(value: string): VersionRange {
         default:
           throw new TypeError(
             `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${value}"`
+            ` parsing "${specifier}"`
           );
       }
     } else if (versionCoreStates.includes(state)) {
