@@ -143,20 +143,30 @@ function parseHyphenRange(specifier: string): VersionRange {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         switch (state) {
           case 'in-major':
-            throw new TypeError(`The "${char}" character is invalid for MAJOR versions`);
+            throw new TypeError(
+              `The "${char}" character is invalid for MAJOR versions in "${specifier}"`
+            );
           case 'in-minor':
-            throw new TypeError(`The "${char}" character is invalid for MINOR versions`);
+            throw new TypeError(
+              `The "${char}" character is invalid for MINOR versions in "${specifier}"`
+            );
           case 'in-patch':
-            throw new TypeError(`The "${char}" character is invalid for PATCH versions`);
+            throw new TypeError(
+              `The "${char}" character is invalid for PATCH versions in "${specifier}"`
+            );
         }
       }
     } else if (prereleaseAndBuildStates.includes(state)) {
       if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
         switch (state) {
           case 'in-prerelease':
-            throw new TypeError(`The "${char}" character is invalid for a pre-release`);
+            throw new TypeError(
+              `The "${char}" character is invalid for a pre-release in "${specifier}"`
+            );
           case 'in-build':
-            throw new TypeError(`The "${char}" character is invalid for a build`);
+            throw new TypeError(
+              `The "${char}" character is invalid for a build in "${specifier}"`
+            );
         }
       }
     }
@@ -182,15 +192,21 @@ function parseHyphenRange(specifier: string): VersionRange {
       case 'in-build':
         buffer[isInBound].build += char;
         break;
+      default:
+        throw new TypeError(`In invalid state "${state}" in "${specifier}"`);
     }
   });
 
   if (!buffer.upper.major) {
-    throw new TypeError('An upper bound for a hyphen range specifier could not be found');
+    throw new TypeError(
+      `An upper bound for a hyphen range specifier could not be found in "${specifier}"`
+    );
   }
 
   if (!buffer.lower.major) {
-    throw new TypeError('A lower bound for a hyphen range specifier could not be found');
+    throw new TypeError(
+      `A lower bound for a hyphen range specifier could not be found in "${specifier}"`
+    );
   }
 
   return new VersionRange({
@@ -311,20 +327,30 @@ function parseVersionClause(specifier: string): VersionClause {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         switch (state) {
           case 'in-major':
-            throw new TypeError(`The "${char}" character is invalid for MAJOR versions`);
+            throw new TypeError(
+              `The "${char}" character is invalid for MAJOR versions in "${specifier}"
+            `);
           case 'in-minor':
-            throw new TypeError(`The "${char}" character is invalid for MINOR versions`);
+            throw new TypeError(
+              `The "${char}" character is invalid for MINOR versions in "${specifier}"`
+            );
           case 'in-patch':
-            throw new TypeError(`The "${char}" character is invalid for PATCH versions`);
+            throw new TypeError(
+              `The "${char}" character is invalid for PATCH versions in "${specifier}"`
+            );
         }
       }
     } else if (prereleaseAndBuildStates.includes(state)) {
       if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
         switch (state) {
           case 'in-prerelease':
-            throw new TypeError(`The "${char}" character is invalid for a pre-release`);
+            throw new TypeError(
+              `The "${char}" character is invalid for a pre-release in "${specifier}"`
+            );
           case 'in-build':
-            throw new TypeError(`The "${char}" character is invalid for a build`);
+            throw new TypeError(
+              `The "${char}" character is invalid for a build in "${specifier}"`
+            );
         }
       }
     }
@@ -353,6 +379,8 @@ function parseVersionClause(specifier: string): VersionClause {
       case 'in-build':
         buffer.build += char;
         break;
+      default:
+        throw new TypeError(`In invalid state "${state}" in "${specifier}"`);
     }
   });
 
@@ -403,15 +431,17 @@ export default function parseSpecifier(value: string): (VersionClause | VersionR
     let clauseIsPresent = false;
     let rangeIsPresent = false;
 
-    logicalAndSpecifiers.forEach(specifier => {
-      if (specifier instanceof VersionClause) {
+    logicalAndSpecifiers.forEach(logicalAndSpecifier => {
+      if (logicalAndSpecifier instanceof VersionClause) {
         clauseIsPresent = true;
-      } else if (specifier instanceof VersionRange) {
+      } else if (logicalAndSpecifier instanceof VersionRange) {
         rangeIsPresent = true;
       } else {
-        const type = Object.getPrototypeOf(specifier).constructor.name;
+        const type = Object.getPrototypeOf(logicalAndSpecifier).constructor.name;
 
-        throw new TypeError(`Invalid instance of type "${type}" encountered while parsing`);
+        throw new TypeError(
+          `Invalid instance of type "${type}" encountered while parsing "${value}"`
+        );
       }
     });
 
