@@ -11,8 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- A `SemanticVersion` type to represent the result of the `parse(...)` function.
 - A `SPEC_VERSION` constant which identifies which version of the SemVer spec this module implements.
+- `is.specifier(...).valid()` to validate version specifiers.
+- `does(...).satisfy(...)` to check if versions satisfy version specifiers.
+
+### Changed
+
+- The `parse(...)` function now returns an instance of the new `SemanticVersion` class.
+
+### Fixed
+
+- Rewrote the parser to catch invalid versions such as `1.0.0.0`.
 
 [0.6.0] - 2025-09-07
 --------------------

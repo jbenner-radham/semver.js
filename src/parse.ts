@@ -1,24 +1,18 @@
-import isIntLike from './is-int-like.js';
+import { VALID_PRERELEASE_AND_BUILD_CHARS, VALID_VERSION_DIGIT_CHARS } from './constants';
 import parseBuild from './parse-build';
 import parsePrerelease from './parse-prerelease';
+import SemanticVersion from './semantic-version';
+import { getParsingErrorMessage } from './util';
 
-export type SemanticVersion = {
-  major: number;
-  minor: number;
-  patch: number;
-  prerelease: string;
-  build: string;
-  versionCore: string;
-};
+export default function parse(version: string): SemanticVersion {
+  type State = 'initialization'
+    | 'in-major'
+    | 'in-minor'
+    | 'in-patch'
+    | 'in-prerelease'
+    | 'in-build';
 
-export default function parse(value = ''): SemanticVersion {
-  const status = {
-    atMajor: true,
-    atMinor: false,
-    atPatch: false,
-    atPrerelease: false,
-    atBuild: false
-  };
+  let state: State = 'initialization';
   const buffer = {
     major: '',
     minor: '',
@@ -27,96 +21,127 @@ export default function parse(value = ''): SemanticVersion {
     build: ''
   };
   const errors: TypeError[] = [];
-  const chars = [...(value.startsWith('v') ? value.replace('v', '') : value)];
+  const normalizedVersion = version.startsWith('v')
+    ? version.replace('v', '')
+    : version;
+  const chars = [...normalizedVersion];
 
-  chars.forEach(char => {
-    if (status.atMajor && char !== '.') {
-      if (!isIntLike(char)) {
-        errors.push(
-          new TypeError(`The character "${char}" is not a valid MAJOR version character`)
-        );
+  chars.forEach((char, position) => {
+    let doNotBuffer = false;
 
-        return;
+    if (VALID_VERSION_DIGIT_CHARS.includes(char)) {
+      switch (state) {
+        case 'initialization':
+          state = 'in-major';
+          break;
+        case 'in-major':
+        case 'in-minor':
+        case 'in-patch':
+        case 'in-prerelease':
+        case 'in-build':
+          break;
+        default:
+          doNotBuffer = true;
+          errors.push(
+            new TypeError(
+              getParsingErrorMessage({ char, position, state, within: normalizedVersion })
+            )
+          );
       }
-
-      buffer.major += char;
-
-      return;
-    }
-
-    if (status.atMajor && char === '.') {
-      status.atMajor = false;
-      status.atMinor = true;
-
-      return;
-    }
-
-    if (status.atMinor && char !== '.') {
-      if (!isIntLike(char)) {
-        errors.push(
-          new TypeError(`The character "${char}" is not a valid MINOR version character`)
-        );
-
-        return;
+    } else if (char === '.') {
+      switch (state) {
+        case 'in-major':
+          doNotBuffer = true;
+          state = 'in-minor';
+          break;
+        case 'in-minor':
+          doNotBuffer = true;
+          state = 'in-patch';
+          break;
+        case 'in-prerelease':
+        case 'in-build':
+          break;
+        default:
+          doNotBuffer = true;
+          errors.push(
+            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+          );
       }
-
-      buffer.minor += char;
-
-      return;
-    }
-
-    if (status.atMinor && char === '.') {
-      status.atMinor = false;
-      status.atPatch = true;
-
-      return;
-    }
-
-    if (status.atPatch && char === '-') {
-      status.atPatch = false;
-      status.atPrerelease = true;
-
-      return;
-    }
-
-    if (status.atPatch && char === '+') {
-      status.atPatch = false;
-      status.atBuild = true;
-
-      return;
-    }
-
-    if (status.atPatch && char !== '.') {
-      if (!isIntLike(char)) {
-        errors.push(
-          new TypeError(`The character "${char}" is not a valid PATCH version character`)
-        );
-
-        return;
+    } else if (char === '-') {
+      switch (state) {
+        case 'in-patch':
+          doNotBuffer = true;
+          state = 'in-prerelease';
+          break;
+        default:
+          doNotBuffer = true;
+          errors.push(
+            new TypeError(
+              getParsingErrorMessage({ char, position, state, within: normalizedVersion })
+            )
+          );
       }
+    } else if (char === '+') {
+      switch (state) {
+        case 'in-patch':
+        case 'in-prerelease':
+          doNotBuffer = true;
+          state = 'in-build';
+          break;
+        default:
+          doNotBuffer = true;
+          errors.push(
+            new TypeError(
+              getParsingErrorMessage({ char, position, state, within: normalizedVersion })
+            )
+          );
+      }
+    } else if (VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
+      switch (state) {
+        case 'in-prerelease':
+        case 'in-build':
+          break;
+        default:
+          doNotBuffer = true;
+          errors.push(
+            new TypeError(
+              getParsingErrorMessage({ char, position, state, within: normalizedVersion })
+            )
+          );
+      }
+    } else {
+      doNotBuffer = true;
+      errors.push(
+        new TypeError(getParsingErrorMessage({ char, position, state, within: normalizedVersion }))
+      );
+    }
 
-      buffer.patch += char;
-
+    if (doNotBuffer) {
       return;
     }
 
-    if (status.atPrerelease && char !== '+') {
-      buffer.prerelease += char;
-
-      return;
-    }
-
-    if (status.atPrerelease && char === '+') {
-      status.atPrerelease = false;
-      status.atBuild = true;
-
-      return;
-    }
-
-    if (status.atBuild) {
-      buffer.build += char;
-
-      return;
+    switch (state) {
+      case 'in-major':
+        buffer.major += char;
+        break;
+      case 'in-minor':
+        buffer.minor += char;
+        break;
+      case 'in-patch':
+        buffer.patch += char;
+        break;
+      case 'in-prerelease':
+        buffer.prerelease += char;
+        break;
+      case 'in-build':
+        buffer.build += char;
+        break;
+      default:
+        errors.push(
+          new TypeError(
+            `In invalid state "${state}" in "${normalizedVersion}" at position ${position}`
+          )
+        );
     }
   });
 
@@ -153,15 +178,14 @@ export default function parse(value = ''): SemanticVersion {
   if (errors.length > 1) {
     throw new AggregateError(
       errors,
-      `Multiple TypeErrors were encountered when parsing the version "${value}"`
+      `Multiple TypeErrors were encountered when parsing the version "${normalizedVersion}"`
     );
   }
 
-  return {
+  return new SemanticVersion({
     ...buffer,
     major: Number.parseInt(buffer.major),
     minor: Number.parseInt(buffer.minor),
-    patch: Number.parseInt(buffer.patch),
-    versionCore: `${buffer.major}.${buffer.minor}.${buffer.patch}`
-  };
+    patch: Number.parseInt(buffer.patch)
+  });
 }

@@ -1,4 +1,5 @@
 import { parse } from '../src/index.js';
+import SemanticVersion from '../src/semantic-version';
 import { describe, expect, it } from 'vitest';
 
 describe('parse', () => {
@@ -6,8 +7,8 @@ describe('parse', () => {
     expect(parse).toBeTypeOf('function');
   });
 
-  it('returns an object', () => {
-    expect(parse()).toBeTypeOf('object');
+  it('returns an instance of SemanticVersion', () => {
+    expect(parse('1.0.0')).toBeInstanceOf(SemanticVersion);
   });
 
   describe('when passed v1.0.0', () => {

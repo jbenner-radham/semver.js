@@ -7,7 +7,10 @@ A library for parsing and working with [Semantic Versioning](https://semver.org/
 
 Why Another SemVer Library?
 ---------------------------
-This library doesn't use RegEx at all. Meaning that it's immune to [ReDoS](https://en.wikipedia.org/wiki/ReDoS) attacks. Is that a big deal? Honestly, I'll leave that up to you to decide. Another reason is that I felt the APIs of the available SemVer packages could be more semantic, so I figured I'd try my hand at it while keeping the package at zero dependencies.
+This library doesn't use RegEx at all. Meaning that it's immune to [ReDoS](https://en.wikipedia.org/wiki/ReDoS) attacks. Is that a
+big deal? Honestly, I'll leave that up to you to decide. Another reason is that I felt the APIs of
+the available SemVer packages could be more semantic, so I figured I'd try my hand at it while
+keeping the package at zero dependencies.
 
 Install
 -------
@@ -18,7 +21,14 @@ npm install @radham/semver
 Usage
 -----
 ```javascript
-import { is, parse } from '@radham/semver';
+import { SPEC_VERSION, does, is, parse } from '@radham/semver';
+
+// The implemented version of the Semantic Versioning specification.
+console.log(SPEC_VERSION); // > '2.0.0'
+
+// Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
+does('1.2.5').satisfy('~1.2'); // > true
+is.specifier('~1.2').valid(); // > true
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 is('0.5.5-rc.1').valid(); // > true
@@ -44,7 +54,14 @@ parse('v1.5.2-beta.2+fe523');
 If you feel the API is too verbose, convenience methods are available.
 
 ```javascript
-import { is, parse } from '@radham/semver';
+import { SPEC_VERSION, does, is, parse } from '@radham/semver';
+
+// The implemented version of the Semantic Versioning specification.
+console.log(SPEC_VERSION); // > '2.0.0'
+
+// Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
+does('1.2.5').satisfy('~1.2'); // > true
+is.specifier('~1.2').valid(); // > true
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 is('0.5.5-rc.1').valid(); // > true
@@ -70,7 +87,14 @@ parse('v1.5.2-beta.2+fe523');
 Or if you find the default imports too ambiguously named.
 
 ```javascript
-import { is as isVersion, parse as parseVersion } from '@radham/semver';
+import { SPEC_VERSION, does as doesVersion, is as isVersion, parse as parseVersion } from '@radham/semver';
+
+// The implemented version of the Semantic Versioning specification.
+console.log(SPEC_VERSION); // > '2.0.0'
+
+// Satisfaction will throw on invalid versions and/or specifiers so you may want to validate first.
+doesVersion('1.2.5').satisfy('~1.2'); // > true
+isVersion.specifier('~1.2').valid(); // > true
 
 // Comparison methods will throw on invalid versions so you may want to validate first.
 isVersion('0.5.5-rc.1').valid(); // > true
@@ -92,6 +116,13 @@ parseVersion('v1.5.2-beta.2+fe523');
 // >   versionCore: '1.5.2'
 // > }
 ```
+
+Terminology
+-----------
+While the official npm semver library uses the term "range", I decided that "version specifier"
+would be more appropriate. The rationale behind this choice is that version specifiers don't always
+define a range; they can also specify a version verbatim. Thus, you'll see the term "specifier"
+utilized in this library.
 
 Reference
 ---------

@@ -67,6 +67,12 @@ export const ASCII_SORT_ORDER = [
   'z'
 ];
 
+export const LOGICAL_OR_OPERATOR = '||';
+
+export const HYPHEN_RANGE_OPERATOR = ' - ';
+
+export const NORMALIZED_X_RANGE_CHAR = 'x';
+
 /**
  * The implemented SemVer specification version.
  */
@@ -76,7 +82,6 @@ export const SPEC_VERSION = '2.0.0';
  * @see https://semver.org/spec/v2.0.0.html#backusnaur-form-grammar-for-valid-semver-versions
  */
 export const VALID_PRERELEASE_AND_BUILD_CHARS = [
-  '-',
   '.',
   '0',
   '1',
@@ -140,4 +145,61 @@ export const VALID_PRERELEASE_AND_BUILD_CHARS = [
   'x',
   'y',
   'z'
+];
+
+export const VALID_SPECIFIER_COMPARATORS = [
+  '<',
+  '<=',
+  '=',
+  '>',
+  '>=',
+  '^',
+  '~'
+];
+
+export const VALID_SPECIFIER_COMPARATOR_CHARS = [
+  '<',
+  '=',
+  '>',
+  '^',
+  '~'
+];
+
+export const VALID_SPECIFIER_VERSION_CORE_CHARS = [
+  '*',
+  '.',
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  'X',
+  'x'
+];
+
+export const VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS =
+  VALID_SPECIFIER_VERSION_CORE_CHARS.filter(char => char !== '.');
+
+export const VALID_VERSION_DIGIT_CHARS = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9'
+];
+
+export const VALID_X_RANGE_CHARS = [
+  '*',
+  'X',
+  'x'
 ];
