@@ -4,7 +4,7 @@ import {
   VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS
 } from '../constants';
 import type { VersionComparator } from '../types';
-import { isEmptyString, trim } from '../util';
+import { getParsingErrorMessage, isEmptyString, trim } from '../util';
 import ensureValidComparator from './ensure-valid-comparator';
 import {
   getLogicalAndSpecifiers,
@@ -58,10 +58,7 @@ function parseHyphenRange(specifier: string): VersionRange {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (char === ' ') {
       switch (state) {
@@ -76,10 +73,7 @@ function parseHyphenRange(specifier: string): VersionRange {
             isInBound = 'upper';
             state = 'initialization';
           } else {
-            throw new TypeError(
-              `A "${char}" character was found in an invalid position in the "${state}" state` +
-              ` while parsing "${specifier}"`
-            );
+            throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
           }
           break;
         default:
@@ -99,10 +93,7 @@ function parseHyphenRange(specifier: string): VersionRange {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (char === '+') {
       switch (state) {
@@ -110,10 +101,7 @@ function parseHyphenRange(specifier: string): VersionRange {
         case 'in-prerelease':
           throw new TypeError(`Build metadata found in "${specifier}"`);
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (char === '-') {
       switch (state) {
@@ -126,10 +114,7 @@ function parseHyphenRange(specifier: string): VersionRange {
           state = 'in-hyphen';
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
@@ -242,10 +227,7 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (char === '.') {
       switch (state) {
@@ -260,10 +242,7 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (char === '+') {
       switch (state) {
@@ -273,10 +252,7 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-prerelease':
           throw new TypeError(`Build metadata found in "${specifier}"`);
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (char === '-') {
       switch (state) {
@@ -287,20 +263,14 @@ function parseVersionClause(specifier: string): VersionClause {
           state = 'in-prerelease';
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
       switch (state) {
         case 'in-comparator':
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state while` +
-            ` parsing "${specifier}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {

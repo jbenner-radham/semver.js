@@ -6,6 +6,7 @@ import {
   VALID_SPECIFIER_COMPARATORS,
   VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS
 } from '../constants';
+import { getParsingErrorMessage } from '../util';
 
 export function getLogicalAndSpecifiers(value: string): string[] {
   type State = 'initialization'
@@ -100,10 +101,7 @@ export function getLogicalAndSpecifiers(value: string): string[] {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state` +
-            ` within "${value}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: value }));
       }
     } else if (char === '-') {
       switch (state) {
@@ -116,10 +114,7 @@ export function getLogicalAndSpecifiers(value: string): string[] {
           state = 'in-hyphen';
           break;
         default:
-          throw new TypeError(
-            `A "${char}" character was found in an invalid position in the "${state}" state` +
-            ` within "${value}"`
-          );
+          throw new TypeError(getParsingErrorMessage({ char, state, within: value }));
       }
     } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
@@ -146,10 +141,7 @@ export function getLogicalAndSpecifiers(value: string): string[] {
         throw new TypeError(`Invalid character "${char}" post hyphen`);
       }
     } else {
-      throw new TypeError(
-        `A "${char}" character was found in an invalid position in the "${state}" state within` +
-        ` "${value}"`
-      );
+      throw new TypeError(getParsingErrorMessage({ char, state, within: value }));
     }
 
     if (state === 'in-next-specifier') {

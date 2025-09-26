@@ -2,6 +2,7 @@ import { VALID_PRERELEASE_AND_BUILD_CHARS, VALID_VERSION_DIGIT_CHARS } from './c
 import parseBuild from './parse-build';
 import parsePrerelease from './parse-prerelease';
 import SemanticVersion from './semantic-version';
+import { getParsingErrorMessage } from './util';
 
 export default function parse(version: string): SemanticVersion {
   type State = 'initialization'
@@ -62,12 +63,7 @@ export default function parse(version: string): SemanticVersion {
           break;
         default:
           doNotBuffer = true;
-          errors.push(
-            new TypeError(
-              `A "${char}" character was found in an invalid position in the "${state}" state` +
-              ` while parsing "${version}"`
-            )
-          );
+          errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
       }
     } else if (char === '-') {
       switch (state) {
@@ -77,12 +73,7 @@ export default function parse(version: string): SemanticVersion {
           break;
         default:
           doNotBuffer = true;
-          errors.push(
-            new TypeError(
-              `A "${char}" character was found in an invalid position in the "${state}" state` +
-              ` while parsing "${version}"`
-            )
-          );
+          errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
       }
     } else if (char === '+') {
       switch (state) {
@@ -93,12 +84,7 @@ export default function parse(version: string): SemanticVersion {
           break;
         default:
           doNotBuffer = true;
-          errors.push(
-            new TypeError(
-              `A "${char}" character was found in an invalid position in the "${state}" state` +
-              ` while parsing "${version}"`
-            )
-          );
+          errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
       }
     } else if (VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
       switch (state) {
@@ -107,21 +93,11 @@ export default function parse(version: string): SemanticVersion {
           break;
         default:
           doNotBuffer = true;
-          errors.push(
-            new TypeError(
-              `A "${char}" character was found in an invalid position in the "${state}" state` +
-              ` while parsing "${version}"`
-            )
-          );
+          errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
       }
     } else {
       doNotBuffer = true;
-      errors.push(
-        new TypeError(
-          `A "${char}" character was found in an invalid position in the "${state}" state` +
-          ` while parsing "${version}"`
-        )
-      );
+      errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
     }
 
     if (doNotBuffer) {
