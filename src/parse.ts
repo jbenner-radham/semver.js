@@ -64,7 +64,8 @@ export default function parse(version: string): SemanticVersion {
           doNotBuffer = true;
           errors.push(
             new TypeError(
-              `A "." character was found in an invalid position in the "${state}" state`
+              `A "${char}" character was found in an invalid position in the "${state}" state` +
+              ` while parsing "${version}"`
             )
           );
       }
@@ -78,7 +79,8 @@ export default function parse(version: string): SemanticVersion {
           doNotBuffer = true;
           errors.push(
             new TypeError(
-              `A "-" character was found in an invalid position in the "${state}" state`
+              `A "${char}" character was found in an invalid position in the "${state}" state` +
+              ` while parsing "${version}"`
             )
           );
       }
@@ -93,7 +95,8 @@ export default function parse(version: string): SemanticVersion {
           doNotBuffer = true;
           errors.push(
             new TypeError(
-              `A "+" character was found in an invalid position in the "${state}" state`
+              `A "${char}" character was found in an invalid position in the "${state}" state` +
+              ` while parsing "${version}"`
             )
           );
       }
@@ -106,7 +109,8 @@ export default function parse(version: string): SemanticVersion {
           doNotBuffer = true;
           errors.push(
             new TypeError(
-              `A "${char}" character was found in an invalid position in the "${state}" state`
+              `A "${char}" character was found in an invalid position in the "${state}" state` +
+              ` while parsing "${version}"`
             )
           );
       }
@@ -114,7 +118,8 @@ export default function parse(version: string): SemanticVersion {
       doNotBuffer = true;
       errors.push(
         new TypeError(
-          `A "${char}" character was found in an invalid position in the "${state}" state`
+          `A "${char}" character was found in an invalid position in the "${state}" state` +
+          ` while parsing "${version}"`
         )
       );
     }
