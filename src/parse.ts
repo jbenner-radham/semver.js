@@ -26,7 +26,7 @@ export default function parse(version: string): SemanticVersion {
     : version;
   const chars = [...normalizedVersion];
 
-  chars.forEach(char => {
+  chars.forEach((char, position) => {
     let doNotBuffer = false;
 
     if (VALID_VERSION_DIGIT_CHARS.includes(char)) {
@@ -43,9 +43,7 @@ export default function parse(version: string): SemanticVersion {
         default:
           doNotBuffer = true;
           errors.push(
-            new TypeError(
-              `Digit character "${char}" is in an invalid position in the "${state}" state`
-            )
+            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
           );
       }
     } else if (char === '.') {
@@ -63,7 +61,9 @@ export default function parse(version: string): SemanticVersion {
           break;
         default:
           doNotBuffer = true;
-          errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
+          errors.push(
+            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+          );
       }
     } else if (char === '-') {
       switch (state) {
@@ -73,7 +73,9 @@ export default function parse(version: string): SemanticVersion {
           break;
         default:
           doNotBuffer = true;
-          errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
+          errors.push(
+            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+          );
       }
     } else if (char === '+') {
       switch (state) {
@@ -84,7 +86,9 @@ export default function parse(version: string): SemanticVersion {
           break;
         default:
           doNotBuffer = true;
-          errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
+          errors.push(
+            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+          );
       }
     } else if (VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
       switch (state) {
@@ -93,11 +97,15 @@ export default function parse(version: string): SemanticVersion {
           break;
         default:
           doNotBuffer = true;
-          errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
+          errors.push(
+            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+          );
       }
     } else {
       doNotBuffer = true;
-      errors.push(new TypeError(getParsingErrorMessage({ char, state, within: version })));
+      errors.push(
+        new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+      );
     }
 
     if (doNotBuffer) {
@@ -121,7 +129,7 @@ export default function parse(version: string): SemanticVersion {
         buffer.build += char;
         break;
       default:
-        errors.push(new TypeError(`In invalid state "${state}"`));
+        errors.push(new TypeError(`In invalid state "${state}" at position ${position}`));
     }
   });
 

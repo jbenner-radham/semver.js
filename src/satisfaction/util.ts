@@ -26,7 +26,7 @@ export function getLogicalAndSpecifiers(specifier: string): string[] {
   let buffer = '';
   let state: State = 'initialization';
 
-  chars.forEach(char => {
+  chars.forEach((char, position) => {
     if (state === 'initialization') {
       const isComparatorChar = VALID_SPECIFIER_COMPARATOR_CHARS.includes(char);
       const isDigitOrXRangeChar = VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char);
@@ -50,18 +50,14 @@ export function getLogicalAndSpecifiers(specifier: string): string[] {
         case 'in-minor':
         case 'in-patch':
         case 'in-prerelease':
-          throw new TypeError(
-            'A comparator must precede a version specifier, not be contained within it'
-          );
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
         case 'in-space':
           state = 'in-next-specifier';
           break;
         case 'in-hyphen':
-          throw new TypeError(
-            'A comparator cannot immediately follow a hyphen in a version specifier'
-          );
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
         case 'in-hyphen-trailing-space':
-          throw new TypeError('A comparator cannot be a part of a version range specifier');
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
         default:
           state = 'in-comparator';
           break;
@@ -101,7 +97,7 @@ export function getLogicalAndSpecifiers(specifier: string): string[] {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (char === '-') {
       switch (state) {
@@ -114,34 +110,24 @@ export function getLogicalAndSpecifiers(specifier: string): string[] {
           state = 'in-hyphen';
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
-        switch (state) {
-          case 'in-major':
-            throw new TypeError(`The "${char}" character is invalid for MAJOR versions`);
-          case 'in-minor':
-            throw new TypeError(`The "${char}" character is invalid for MINOR versions`);
-          case 'in-patch':
-            throw new TypeError(`The "${char}" character is invalid for PATCH versions`);
-        }
+        throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (state === 'in-prerelease') {
       if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
-        switch (state) {
-          case 'in-prerelease':
-            throw new TypeError(`The "${char}" character is invalid for a pre-release`);
-        }
+        throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (state === 'in-hyphen-trailing-space') {
       if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         state = 'in-major';
       } else if (char !== ' ') {
-        throw new TypeError(`Invalid character "${char}" post hyphen`);
+        throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else {
-      throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+      throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
     }
 
     if (state === 'in-next-specifier') {

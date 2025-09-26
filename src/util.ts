@@ -1,10 +1,11 @@
-export function getParsingErrorMessage({ char, state, within }: {
+export function getParsingErrorMessage({ char, position, state, within }: {
   char: string;
+  position: number;
   state: string;
   within: string;
 }): string {
-  return `A "${char}" character was found in an invalid position in the "${state}" state while` +
-    ` parsing "${within}"`;
+  return `An invalid character "${char}" was found in the "${state}" state while parsing` +
+    ` "${within}" at position ${position}`;
 }
 
 export function isEmptyString(value: string): boolean {

@@ -44,7 +44,7 @@ function parseHyphenRange(specifier: string): VersionRange {
   let isInBound: 'lower' | 'upper' = 'lower';
   let state: State = 'initialization';
 
-  chars.forEach(char => {
+  chars.forEach((char, position) => {
     let doNotBuffer = false;
 
     if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
@@ -58,7 +58,7 @@ function parseHyphenRange(specifier: string): VersionRange {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (char === ' ') {
       switch (state) {
@@ -73,7 +73,9 @@ function parseHyphenRange(specifier: string): VersionRange {
             isInBound = 'upper';
             state = 'initialization';
           } else {
-            throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+            throw new TypeError(
+              getParsingErrorMessage({ char, position, state, within: specifier })
+            );
           }
           break;
         default:
@@ -93,7 +95,7 @@ function parseHyphenRange(specifier: string): VersionRange {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (char === '+') {
       switch (state) {
@@ -101,7 +103,7 @@ function parseHyphenRange(specifier: string): VersionRange {
         case 'in-prerelease':
           throw new TypeError(`Build metadata found in "${specifier}"`);
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (char === '-') {
       switch (state) {
@@ -114,33 +116,15 @@ function parseHyphenRange(specifier: string): VersionRange {
           state = 'in-hyphen';
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
-        switch (state) {
-          case 'in-major':
-            throw new TypeError(
-              `The "${char}" character is invalid for MAJOR versions in "${specifier}"`
-            );
-          case 'in-minor':
-            throw new TypeError(
-              `The "${char}" character is invalid for MINOR versions in "${specifier}"`
-            );
-          case 'in-patch':
-            throw new TypeError(
-              `The "${char}" character is invalid for PATCH versions in "${specifier}"`
-            );
-        }
+        throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (state === 'in-prerelease') {
       if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
-        switch (state) {
-          case 'in-prerelease':
-            throw new TypeError(
-              `The "${char}" character is invalid for a pre-release in "${specifier}"`
-            );
-        }
+        throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     }
 
@@ -163,7 +147,9 @@ function parseHyphenRange(specifier: string): VersionRange {
         buffer[isInBound].prerelease += char;
         break;
       default:
-        throw new TypeError(`In invalid state "${state}" in "${specifier}"`);
+        throw new TypeError(
+          `In invalid state "${state}" in "${specifier}" at position ${position}`
+        );
     }
   });
 
@@ -206,7 +192,7 @@ function parseVersionClause(specifier: string): VersionClause {
   const versionCoreStates: State[] = ['in-major', 'in-minor', 'in-patch'];
   let state: State = 'initialization';
 
-  chars.forEach(char => {
+  chars.forEach((char, position) => {
     let doNotBuffer = false;
 
     if (state === 'initialization') {
@@ -227,7 +213,7 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (char === '.') {
       switch (state) {
@@ -242,7 +228,7 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (char === '+') {
       switch (state) {
@@ -252,7 +238,7 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-prerelease':
           throw new TypeError(`Build metadata found in "${specifier}"`);
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (char === '-') {
       switch (state) {
@@ -263,40 +249,22 @@ function parseVersionClause(specifier: string): VersionClause {
           state = 'in-prerelease';
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
       switch (state) {
         case 'in-comparator':
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
+          throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
-        switch (state) {
-          case 'in-major':
-            throw new TypeError(
-              `The "${char}" character is invalid for MAJOR versions in "${specifier}"
-            `);
-          case 'in-minor':
-            throw new TypeError(
-              `The "${char}" character is invalid for MINOR versions in "${specifier}"`
-            );
-          case 'in-patch':
-            throw new TypeError(
-              `The "${char}" character is invalid for PATCH versions in "${specifier}"`
-            );
-        }
+        throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     } else if (state === 'in-prerelease') {
       if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
-        switch (state) {
-          case 'in-prerelease':
-            throw new TypeError(
-              `The "${char}" character is invalid for a pre-release in "${specifier}"`
-            );
-        }
+        throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
     }
 
@@ -322,7 +290,9 @@ function parseVersionClause(specifier: string): VersionClause {
         buffer.prerelease += char;
         break;
       default:
-        throw new TypeError(`In invalid state "${state}" in "${specifier}"`);
+        throw new TypeError(
+          `In invalid state "${state}" in "${specifier}" at position ${position}`
+        );
     }
   });
 
