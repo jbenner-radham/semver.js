@@ -32,9 +32,7 @@ export function getLogicalAndSpecifiers(specifier: string): string[] {
       const isDigitOrXRangeChar = VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char);
 
       if (!isComparatorChar && !isDigitOrXRangeChar) {
-        throw new TypeError(
-          `The character "${char}" is not valid at the start of a version specifier`
-        );
+        throw new TypeError(getParsingErrorMessage({ char, position, state, within: specifier }));
       }
 
       if (isComparatorChar) {

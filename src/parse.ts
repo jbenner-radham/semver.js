@@ -139,7 +139,7 @@ export default function parse(version: string): SemanticVersion {
       default:
         errors.push(
           new TypeError(
-            `In invalid state "${state}" within "${normalizedVersion}" at position ${position}`
+            `In invalid state "${state}" in "${normalizedVersion}" at position ${position}`
           )
         );
     }
