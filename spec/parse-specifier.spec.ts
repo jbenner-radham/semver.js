@@ -126,4 +126,22 @@ describe('parseSpecifier', () => {
       });
     });
   });
+
+  describe('when passed an invalid value', () => {
+    it('throws an error when passed ^1.x@', () => {
+      expect(() => parseSpecifier('^1.x@')).toThrowError();
+    });
+
+    it('throws an error when passed ~1.0.!', () => {
+      expect(() => parseSpecifier('~1.0.!')).toThrowError();
+    });
+
+    it('throws an error when passed 1.0.0 - 2.0.0.1', () => {
+      expect(() => parseSpecifier('1.0.0 - 2.0.0.1')).toThrowError();
+    });
+
+    it('throws an error when passed 1.0.0 - ', () => {
+      expect(() => parseSpecifier('1.0.0 - ')).toThrowError();
+    });
+  });
 });
