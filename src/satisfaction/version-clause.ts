@@ -34,8 +34,8 @@ export default class VersionClause {
     return this.#prerelease;
   }
 
-  #normalizeComparator(value: VersionComparator | ''): VersionComparator {
-    return !value.length ? '=' : value as VersionComparator;
+  #normalizeComparator(comparator: VersionComparator | ''): VersionComparator {
+    return !comparator.length ? '=' : comparator as VersionComparator;
   }
 
   #normalizeNumberOrXRange(value: number | string): VersionNumberOrXRange {
