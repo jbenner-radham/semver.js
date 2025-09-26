@@ -68,4 +68,22 @@ export default class SemanticVersion {
 
     return this.versionCore;
   }
+
+  valueOf(): {
+    major: number;
+    minor: number;
+    patch: number;
+    prerelease: string;
+    build: string;
+    versionCore: string;
+  } {
+    return {
+      major: this.major,
+      minor: this.minor,
+      patch: this.patch,
+      prerelease: this.prerelease,
+      build: this.build,
+      versionCore: this.versionCore
+    };
+  }
 }
