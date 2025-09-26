@@ -403,7 +403,7 @@ function parseVersionClause(specifier: string): VersionClause {
  * And each row represents logical OR expressions. If there is only one row, no logical OR
  * expressions are present.
  */
-export default function parseSpecifier(value: string): (VersionClause | VersionRange)[][] {
+export default function parseSpecifier(specifier: string): (VersionClause | VersionRange)[][] {
   const parse = (value: string): VersionClause | VersionRange => {
     return isHyphenRange(value)
       ? parseHyphenRange(value)
@@ -412,19 +412,21 @@ export default function parseSpecifier(value: string): (VersionClause | VersionR
 
   let specifiers: (VersionClause | VersionRange)[][] = [];
 
-  if (isLogicalOrSpecifier(value)) {
-    const logicalOrSpecifiers = getLogicalOrSpecifiers(value);
+  if (isLogicalOrSpecifier(specifier)) {
+    const logicalOrSpecifiers = getLogicalOrSpecifiers(specifier);
     const isInvalidLogicalOr = logicalOrSpecifiers.map(trim).some(isEmptyString);
 
     if (isInvalidLogicalOr) {
-      throw new TypeError(`The specifier "${value}" has one or more invalid logical OR operators`);
+      throw new TypeError(
+        `The specifier "${specifier}" has one or more invalid logical OR operators`
+      );
     }
 
     specifiers = logicalOrSpecifiers.map(logicalOrSpecifier =>
       getLogicalAndSpecifiers(logicalOrSpecifier).map(parse)
     );
   } else {
-    specifiers = [getLogicalAndSpecifiers(value).map(parse)];
+    specifiers = [getLogicalAndSpecifiers(specifier).map(parse)];
   }
 
   specifiers.forEach(logicalAndSpecifiers => {
@@ -440,14 +442,14 @@ export default function parseSpecifier(value: string): (VersionClause | VersionR
         const type = Object.getPrototypeOf(logicalAndSpecifier).constructor.name;
 
         throw new TypeError(
-          `Invalid instance of type "${type}" encountered while parsing "${value}"`
+          `Invalid instance of type "${type}" encountered while parsing "${specifier}"`
         );
       }
     });
 
     if (clauseIsPresent && rangeIsPresent) {
       throw new TypeError(
-        `Both a version clause and hyphen range are grouped by an AND operator in "${value}"`
+        `Both a version clause and hyphen range are grouped by an AND operator in "${specifier}"`
       );
     }
   });
