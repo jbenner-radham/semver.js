@@ -7,7 +7,10 @@ A library for parsing and working with [Semantic Versioning](https://semver.org/
 
 Why Another SemVer Library?
 ---------------------------
-This library doesn't use RegEx at all. Meaning that it's immune to [ReDoS](https://en.wikipedia.org/wiki/ReDoS) attacks. Is that a big deal? Honestly, I'll leave that up to you to decide. Another reason is that I felt the APIs of the available SemVer packages could be more semantic, so I figured I'd try my hand at it while keeping the package at zero dependencies.
+This library doesn't use RegEx at all. Meaning that it's immune to [ReDoS](https://en.wikipedia.org/wiki/ReDoS) attacks. Is that a
+big deal? Honestly, I'll leave that up to you to decide. Another reason is that I felt the APIs of
+the available SemVer packages could be more semantic, so I figured I'd try my hand at it while
+keeping the package at zero dependencies.
 
 Install
 -------
@@ -113,6 +116,13 @@ parseVersion('v1.5.2-beta.2+fe523');
 // >   versionCore: '1.5.2'
 // > }
 ```
+
+Terminology
+-----------
+While the official npm semver library uses the term "range", I decided that "version specifier"
+would be more appropriate. The rationale behind this choice is that version specifiers don't always
+define a range; they can also specify a version verbatim. Thus, you'll see the term "specifier"
+utilized in this library.
 
 Reference
 ---------
