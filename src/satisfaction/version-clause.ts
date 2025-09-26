@@ -82,7 +82,21 @@ export default class VersionClause {
   }
 
   toString(): string {
-    return JSON.stringify(this.valueOf(), null, 2);
+    const versionCore = `${this.major}.${this.minor}.${this.patch}`;
+
+    if (this.prerelease.length && this.build.length) {
+      return `${this.comparator}${versionCore}-${this.prerelease}+${this.build}`;
+    }
+
+    if (this.prerelease.length && !this.build.length) {
+      return `${this.comparator}${versionCore}-${this.prerelease}`;
+    }
+
+    if (!this.prerelease.length && this.build.length) {
+      return `${this.comparator}${versionCore}+${this.build}`;
+    }
+
+    return `${this.comparator}${versionCore}`;
   }
 
   valueOf(): {
