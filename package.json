@@ -51,7 +51,7 @@
     "@eslint/compat": "^1.4.0",
     "@eslint/js": "^9.36.0",
     "@radham/eslint-config": "^4.0.1",
-    "@stylistic/eslint-plugin": "^5.2.3",
+    "@stylistic/eslint-plugin": "^5.4.0",
     "@types/semver": "^7.7.1",
     "esbuild": "^0.25.10",
     "eslint": "^9.36.0",
