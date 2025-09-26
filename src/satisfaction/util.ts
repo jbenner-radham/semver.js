@@ -8,7 +8,7 @@ import {
 } from '../constants';
 import { getParsingErrorMessage } from '../util';
 
-export function getLogicalAndSpecifiers(value: string): string[] {
+export function getLogicalAndSpecifiers(specifier: string): string[] {
   type State = 'initialization'
     | 'in-comparator'
     | 'in-major'
@@ -20,7 +20,7 @@ export function getLogicalAndSpecifiers(value: string): string[] {
     | 'in-hyphen-trailing-space'
     | 'in-next-specifier';
 
-  const chars = [...value.trim()];
+  const chars = [...specifier.trim()];
   const specifiers: string[] = [];
   const versionCoreStates: State[] = ['in-major', 'in-minor', 'in-patch'];
   let buffer = '';
@@ -101,7 +101,7 @@ export function getLogicalAndSpecifiers(value: string): string[] {
         case 'in-prerelease':
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: value }));
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (char === '-') {
       switch (state) {
@@ -114,7 +114,7 @@ export function getLogicalAndSpecifiers(value: string): string[] {
           state = 'in-hyphen';
           break;
         default:
-          throw new TypeError(getParsingErrorMessage({ char, state, within: value }));
+          throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
       }
     } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
@@ -141,7 +141,7 @@ export function getLogicalAndSpecifiers(value: string): string[] {
         throw new TypeError(`Invalid character "${char}" post hyphen`);
       }
     } else {
-      throw new TypeError(getParsingErrorMessage({ char, state, within: value }));
+      throw new TypeError(getParsingErrorMessage({ char, state, within: specifier }));
     }
 
     if (state === 'in-next-specifier') {
