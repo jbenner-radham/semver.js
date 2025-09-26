@@ -12,11 +12,11 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(eslint@9.36.0)
       '@eslint/js':
-        specifier: ^9.34.0
-        version: 9.34.0
+        specifier: ^9.36.0
+        version: 9.36.0
       '@radham/eslint-config':
         specifier: ^4.0.1
-        version: 4.0.1(@eslint/js@9.34.0)(@stylistic/eslint-plugin@5.2.3(eslint@9.36.0))(eslint-plugin-sort@4.0.0(eslint@9.36.0)(typescript@5.9.2))(eslint@9.36.0)(typescript-eslint@8.41.0(eslint@9.36.0)(typescript@5.9.2))
+        version: 4.0.1(@eslint/js@9.36.0)(@stylistic/eslint-plugin@5.2.3(eslint@9.36.0))(eslint-plugin-sort@4.0.0(eslint@9.36.0)(typescript@5.9.2))(eslint@9.36.0)(typescript-eslint@8.41.0(eslint@9.36.0)(typescript@5.9.2))
       '@stylistic/eslint-plugin':
         specifier: ^5.2.3
         version: 5.2.3(eslint@9.36.0)
@@ -264,10 +264,6 @@ packages:
 
   '@eslint/eslintrc@3.3.1':
     resolution: {integrity: sha512-gtF186CXhIl1p4pJNGZw8Yc6RlshoePRvE0X91oPGb3vZ8pM3qOS9W9NGPat9LziaBV7XrJWGylNQXkGcnM3IQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@eslint/js@9.34.0':
-    resolution: {integrity: sha512-EoyvqQnBNsV1CWaEJ559rxXL4c8V92gxirbawSmVUOWXlsRxxQXl6LmCpdUblgxgSkDIqKnhzba2SjRTI/A5Rw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/js@9.36.0':
@@ -1801,8 +1797,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.34.0': {}
-
   '@eslint/js@9.36.0': {}
 
   '@eslint/object-schema@2.1.6': {}
@@ -1854,9 +1848,9 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@radham/eslint-config@4.0.1(@eslint/js@9.34.0)(@stylistic/eslint-plugin@5.2.3(eslint@9.36.0))(eslint-plugin-sort@4.0.0(eslint@9.36.0)(typescript@5.9.2))(eslint@9.36.0)(typescript-eslint@8.41.0(eslint@9.36.0)(typescript@5.9.2))':
+  '@radham/eslint-config@4.0.1(@eslint/js@9.36.0)(@stylistic/eslint-plugin@5.2.3(eslint@9.36.0))(eslint-plugin-sort@4.0.0(eslint@9.36.0)(typescript@5.9.2))(eslint@9.36.0)(typescript-eslint@8.41.0(eslint@9.36.0)(typescript@5.9.2))':
     dependencies:
-      '@eslint/js': 9.34.0
+      '@eslint/js': 9.36.0
       '@stylistic/eslint-plugin': 5.2.3(eslint@9.36.0)
       eslint: 9.36.0
       eslint-plugin-sort: 4.0.0(eslint@9.36.0)(typescript@5.9.2)
