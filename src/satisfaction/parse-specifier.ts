@@ -222,7 +222,7 @@ function parseVersionClause(specifier: string): VersionClause {
   let state: State = 'initialization';
 
   chars.forEach(char => {
-    let doNotBufferChar = false;
+    let doNotBuffer = false;
 
     if (state === 'initialization') {
       if (VALID_SPECIFIER_COMPARATOR_CHARS.includes(char)) {
@@ -230,7 +230,7 @@ function parseVersionClause(specifier: string): VersionClause {
       } else if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         state = 'in-major';
       } else if (char === ' ') {
-        doNotBufferChar = true;
+        doNotBuffer = true;
       }
     } else if (VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
       switch (state) {
@@ -250,11 +250,11 @@ function parseVersionClause(specifier: string): VersionClause {
     } else if (char === '.') {
       switch (state) {
         case 'in-major':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-minor';
           break;
         case 'in-minor':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-patch';
           break;
         case 'in-prerelease':
@@ -283,7 +283,7 @@ function parseVersionClause(specifier: string): VersionClause {
         case 'in-major':
         case 'in-minor':
         case 'in-patch':
-          doNotBufferChar = true;
+          doNotBuffer = true;
           state = 'in-prerelease';
           break;
         default:
@@ -330,7 +330,7 @@ function parseVersionClause(specifier: string): VersionClause {
       }
     }
 
-    if (doNotBufferChar) {
+    if (doNotBuffer) {
       return;
     }
 

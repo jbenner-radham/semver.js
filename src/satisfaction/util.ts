@@ -14,22 +14,14 @@ export function getLogicalAndSpecifiers(value: string): string[] {
     | 'in-minor'
     | 'in-patch'
     | 'in-prerelease'
-    | 'in-build'
     | 'in-space'
     | 'in-hyphen'
     | 'in-hyphen-trailing-space'
     | 'in-next-specifier';
 
-  const isInPrereleaseOrBuildState = (state: State): boolean => {
-    return ['in-prerelease', 'in-build'].includes(state);
-  };
-
-  const isInVersionCoreState = (state: State): boolean => {
-    return ['in-major', 'in-minor', 'in-patch'].includes(state);
-  };
-
   const chars = [...value.trim()];
   const specifiers: string[] = [];
+  const versionCoreStates: State[] = ['in-major', 'in-minor', 'in-patch'];
   let buffer = '';
   let state: State = 'initialization';
 
@@ -57,7 +49,6 @@ export function getLogicalAndSpecifiers(value: string): string[] {
         case 'in-minor':
         case 'in-patch':
         case 'in-prerelease':
-        case 'in-build':
           throw new TypeError(
             'A comparator must precede a version specifier, not be contained within it'
           );
@@ -107,24 +98,11 @@ export function getLogicalAndSpecifiers(value: string): string[] {
           state = 'in-patch';
           break;
         case 'in-prerelease':
-        case 'in-build':
           break;
         default:
           throw new TypeError(
-            'A "." character was found in an invalid position for a version specifier'
-          );
-      }
-    } else if (char === '+') {
-      switch (state) {
-        case 'in-major':
-        case 'in-minor':
-        case 'in-patch':
-        case 'in-prerelease':
-          state = 'in-build';
-          break;
-        default:
-          throw new TypeError(
-            'A "+" character was found in an invalid position for a version specifier'
+            `A "${char}" character was found in an invalid position in the "${state}" state` +
+            ` within "${value}"`
           );
       }
     } else if (char === '-') {
@@ -139,27 +117,26 @@ export function getLogicalAndSpecifiers(value: string): string[] {
           break;
         default:
           throw new TypeError(
-            'A "-" character was found in an invalid position for a version specifier'
+            `A "${char}" character was found in an invalid position in the "${state}" state` +
+            ` within "${value}"`
           );
       }
-    } else if (isInVersionCoreState(state)) {
+    } else if (versionCoreStates.includes(state)) {
       if (!VALID_SPECIFIER_DIGIT_AND_X_RANGE_CHARS.includes(char)) {
         switch (state) {
           case 'in-major':
-            throw new TypeError(`The "${char}" character is invalid for major versions`);
+            throw new TypeError(`The "${char}" character is invalid for MAJOR versions`);
           case 'in-minor':
-            throw new TypeError(`The "${char}" character is invalid for minor versions`);
+            throw new TypeError(`The "${char}" character is invalid for MINOR versions`);
           case 'in-patch':
-            throw new TypeError(`The "${char}" character is invalid for patch versions`);
+            throw new TypeError(`The "${char}" character is invalid for PATCH versions`);
         }
       }
-    } else if (isInPrereleaseOrBuildState(state)) {
+    } else if (state === 'in-prerelease') {
       if (!VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
         switch (state) {
           case 'in-prerelease':
             throw new TypeError(`The "${char}" character is invalid for a pre-release`);
-          case 'in-build':
-            throw new TypeError(`The "${char}" character is invalid for a build`);
         }
       }
     } else if (state === 'in-hyphen-trailing-space') {
@@ -168,6 +145,11 @@ export function getLogicalAndSpecifiers(value: string): string[] {
       } else if (char !== ' ') {
         throw new TypeError(`Invalid character "${char}" post hyphen`);
       }
+    } else {
+      throw new TypeError(
+        `A "${char}" character was found in an invalid position in the "${state}" state within` +
+        ` "${value}"`
+      );
     }
 
     if (state === 'in-next-specifier') {

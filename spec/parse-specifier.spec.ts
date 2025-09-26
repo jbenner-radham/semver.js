@@ -53,9 +53,77 @@ describe('parseSpecifier', () => {
 
   describe('when passed a hyphen range', () => {
     it('returns a multidimensional array with the corresponding instance', () => {
-      const [[instance]] = parseSpecifier('1.0.0 - 2.0.0');
+      const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
 
       expect(instance).toBeInstanceOf(VersionRange);
+    });
+
+    describe('the instance in the returned multidimensional array', () => {
+      it('has a lower bound', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).lower).toBeInstanceOf(VersionClause);
+      });
+
+      it('has a lower bound with a comparator', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).lower.comparator).toEqual('=');
+      });
+
+      it('has a lower bound with a major version', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).lower.major).toEqual(1);
+      });
+
+      it('has a lower bound with a minor version', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).lower.minor).toEqual(0);
+      });
+
+      it('has a lower bound with a patch version', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).lower.patch).toEqual(0);
+      });
+
+      it('has a lower bound with a pre-release', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).lower.prerelease).toEqual('rc.1');
+      });
+
+      it('has an upper bound', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect(instance.upper).toBeInstanceOf(VersionClause);
+      });
+
+      it('has an upper bound with a major version', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).upper.major).toEqual(2);
+      });
+
+      it('has an upper bound with a minor version', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).upper.minor).toEqual(0);
+      });
+
+      it('has an upper bound with a patch version', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).upper.patch).toEqual(0);
+      });
+
+      it('has an upper bound with a pre-release', () => {
+        const [[instance]] = parseSpecifier('1.0.0-rc.1 - 2.0.0');
+
+        expect((instance satisfies VersionRange).upper.prerelease).toEqual('');
+      });
     });
   });
 });
