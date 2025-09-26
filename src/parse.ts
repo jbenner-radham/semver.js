@@ -43,7 +43,9 @@ export default function parse(version: string): SemanticVersion {
         default:
           doNotBuffer = true;
           errors.push(
-            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+            new TypeError(
+              getParsingErrorMessage({ char, position, state, within: normalizedVersion })
+            )
           );
       }
     } else if (char === '.') {
@@ -74,7 +76,9 @@ export default function parse(version: string): SemanticVersion {
         default:
           doNotBuffer = true;
           errors.push(
-            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+            new TypeError(
+              getParsingErrorMessage({ char, position, state, within: normalizedVersion })
+            )
           );
       }
     } else if (char === '+') {
@@ -87,7 +91,9 @@ export default function parse(version: string): SemanticVersion {
         default:
           doNotBuffer = true;
           errors.push(
-            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+            new TypeError(
+              getParsingErrorMessage({ char, position, state, within: normalizedVersion })
+            )
           );
       }
     } else if (VALID_PRERELEASE_AND_BUILD_CHARS.includes(char)) {
@@ -98,13 +104,15 @@ export default function parse(version: string): SemanticVersion {
         default:
           doNotBuffer = true;
           errors.push(
-            new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+            new TypeError(
+              getParsingErrorMessage({ char, position, state, within: normalizedVersion })
+            )
           );
       }
     } else {
       doNotBuffer = true;
       errors.push(
-        new TypeError(getParsingErrorMessage({ char, position, state, within: version }))
+        new TypeError(getParsingErrorMessage({ char, position, state, within: normalizedVersion }))
       );
     }
 
@@ -129,7 +137,11 @@ export default function parse(version: string): SemanticVersion {
         buffer.build += char;
         break;
       default:
-        errors.push(new TypeError(`In invalid state "${state}" at position ${position}`));
+        errors.push(
+          new TypeError(
+            `In invalid state "${state}" within "${normalizedVersion}" at position ${position}`
+          )
+        );
     }
   });
 
@@ -166,7 +178,7 @@ export default function parse(version: string): SemanticVersion {
   if (errors.length > 1) {
     throw new AggregateError(
       errors,
-      `Multiple TypeErrors were encountered when parsing the version "${version}"`
+      `Multiple TypeErrors were encountered when parsing the version "${normalizedVersion}"`
     );
   }
 
