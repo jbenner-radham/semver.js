@@ -28,7 +28,7 @@ export default class PrereleaseComparator {
       const subjectIdentifier = subject[identifierIndex];
       const comparisonIdentifier = comparison[identifierIndex];
 
-      // If the identifiers are the same continue to the next one.
+      // If the identifiers are the same, continue to the next one.
       if (subjectIdentifier === comparisonIdentifier) {
         continue;
       }
