@@ -22,6 +22,7 @@
   },
   "license": "BSD-3-Clause",
   "author": "James Benner <hello@jamesbenner.com> (https://www.jamesbenner.com/)",
+  "sideEffects": false,
   "type": "module",
   "exports": {
     "require": {
